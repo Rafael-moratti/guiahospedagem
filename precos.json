@@ -1,0 +1,30 @@
+{
+  "ultima_atualizacao": "2025-08-31T10:00:00Z",
+  "hospedagens": {
+    "hostinger": {
+      "preco": "8,99",
+      "moeda": "R$",
+      "link_afiliado": "https://seu-link-afiliado-hostinger"
+    },
+    "hostgator": {
+      "preco": "12,90",
+      "moeda": "R$",
+      "link_afiliado": "https://seu-link-afiliado-hostgator"
+    },
+    "bluehost": {
+      "preco": "2,95",
+      "moeda": "US$",
+      "link_afiliado": "https://seu-link-afiliado-bluehost"
+    },
+    "kinsta": {
+      "preco": "35",
+      "moeda": "US$",
+      "link_afiliado": "https://seu-link-afiliado-kinsta"
+    },
+    "siteground": {
+      "preco": "2,99",
+      "moeda": "US$",
+      "link_afiliado": "https://seu-link-afiliado-siteground"
+    }
+  }
+}

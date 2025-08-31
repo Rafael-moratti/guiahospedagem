@@ -1,0 +1,137 @@
+
+name: Gerar FAQ com IA
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Toda segunda às 9h UTC (6h BR)
+  workflow_dispatch:  # Permite rodar manualmente
+
+env:
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+permissions:
+  contents: write
+
+jobs:
+  gerar-faq:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Gerar FAQ com Gemini
+      run: |
+        node -e "
+        const https = require('https');
+        const fs = require('fs');
+        
+        const prompts = [
+          'Gere 3 perguntas frequentes sobre hospedagem web para iniciantes brasileiros que querem criar seu primeiro site. Foque em dúvidas básicas como diferença entre domínio e hospedagem, preços, e facilidade de uso.',
+          'Gere 3 perguntas técnicas sobre hospedagem web para pessoas que já têm algum conhecimento. Foque em performance, segurança, backup e migração.',
+          'Gere 3 perguntas sobre hospedagem para e-commerce e sites comerciais. Foque em recursos necessários, SSL, certificados, e escalabilidade.'
+        ];
+        
+        async function callGemini(prompt) {
+          return new Promise((resolve, reject) => {
+            const data = JSON.stringify({
+              contents: [{
+                parts: [{ text: prompt + ' Formato: {\"faqs\": [{\"pergunta\": \"pergunta aqui\", \"resposta\": \"resposta detalhada aqui\"}]} - Responda apenas o JSON válido.' }]
+              }],
+              generationConfig: {
+                temperature: 0.7,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 1024
+              }
+            });
+            
+            const options = {
+              hostname: 'generativelanguage.googleapis.com',
+              path: '/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + process.env.GEMINI_API_KEY,
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            };
+            
+            const req = https.request(options, (res) => {
+              let body = '';
+              res.on('data', chunk => body += chunk);
+              res.on('end', () => {
+                try {
+                  const response = JSON.parse(body);
+                  if (response.candidates && response.candidates[0]) {
+                    const text = response.candidates[0].content.parts[0].text;
+                    // Extrair JSON da resposta
+                    const jsonMatch = text.match(/\{.*\}/s);
+                    if (jsonMatch) {
+                      resolve(JSON.parse(jsonMatch[0]));
+                    } else {
+                      reject('JSON não encontrado na resposta');
+                    }
+                  } else {
+                    reject('Resposta inválida da API');
+                  }
+                } catch (error) {
+                  reject('Erro ao processar resposta: ' + error.message);
+                }
+              });
+            });
+            
+            req.on('error', reject);
+            req.write(data);
+            req.end();
+          });
+        }
+        
+        async function gerarTodasFAQs() {
+          const todasFaqs = [];
+          
+          for (const prompt of prompts) {
+            try {
+              console.log('Gerando FAQ...');
+              const resultado = await callGemini(prompt);
+              if (resultado.faqs) {
+                todasFaqs.push(...resultado.faqs);
+              }
+              // Delay para respeitar rate limit
+              await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error) {
+              console.error('Erro:', error);
+            }
+          }
+          
+          // Salvar em arquivo JSON
+          const faqData = {
+            ultima_atualizacao: new Date().toISOString(),
+            faqs: todasFaqs
+          };
+          
+          fs.writeFileSync('faq-gerada.json', JSON.stringify(faqData, null, 2));
+          console.log('FAQ gerada com sucesso! Total:', todasFaqs.length, 'perguntas');
+        }
+        
+        gerarTodasFAQs().catch(console.error);
+        "
+        
+    - name: Configurar Git
+      run: |
+        git config --local user.email "ia@guiahospedagem.com"
+        git config --local user.name "IA FAQ Generator"
+        
+    - name: Commit alterações
+      run: |
+        git add faq-gerada.json
+        if git diff --staged --quiet; then
+          echo "Nenhuma alteração na FAQ"
+        else
+          git commit -m "🤖 FAQ atualizada automaticamente pela IA"
+          git push
+        fi

@@ -17,6 +17,16 @@
     .shadow-soft { box-shadow: 0 10px 30px rgba(2,6,23,.08); }
     .rating { letter-spacing: 1px; }
   </style>
+  <style>
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -323,8 +333,15 @@
 
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 py-10">
-    <h2 class="text-2xl md:text-3xl font-bold">Perguntas frequentes</h2>
-    <div class="mt-6 space-y-3">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl md:text-3xl font-bold">Perguntas frequentes</h2>
+      <div class="text-xs text-slate-500 bg-green-100 px-2 py-1 rounded">
+        🤖 Atualizado por IA
+      </div>
+    </div>
+    
+    <!-- FAQ Estática (fallback) -->
+    <div id="faq-estatica" class="space-y-3">
       <details class="bg-white rounded-xl p-4 shadow-soft group">
         <summary class="font-medium cursor-pointer">Como funcionam os links de afiliado?</summary>
         <p class="mt-2 text-sm text-slate-600">Quando você clica em um link marcado como afiliado e contrata um serviço, podemos receber uma comissão, sem custo extra para você.</p>
@@ -338,8 +355,18 @@
         <p class="mt-2 text-sm text-slate-600">Sim. A maioria das empresas oferece migração gratuita ou assistida.</p>
       </details>
     </div>
+    
+    <!-- FAQ Dinâmica (gerada por IA) -->
+    <div id="faq-dinamica" class="space-y-3"></div>
+    
+    <!-- Botão para mais FAQs -->
+    <div class="mt-6 text-center">
+      <button id="carregar-mais-faq" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 hidden">
+        Ver mais perguntas
+      </button>
+    </div>
   </section>
-
+  
   <!-- Rodapé -->
   <footer class="border-t bg-white/70 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 py-8 text-sm text-slate-600">
@@ -367,7 +394,7 @@
       });
     });
   
-    // NOVO CÓDIGO AQUI (SEM tags <script>)
+    
     async function carregarPrecos() {
       try {
         const response = await fetch('./precos.json?' + Date.now());
@@ -394,12 +421,79 @@
     }
     
     document.addEventListener('DOMContentLoaded', carregarPrecos);
-  
-    // Year (código que já existia)
     document.getElementById('year').textContent = new Date().getFullYear();
+    // Adicione esta função no seu script existente
+
+    // Carregar FAQ gerada por IA
+    async function carregarFAQDinamica() {
+      try {
+        const response = await fetch('./faq-gerada.json?' + Date.now());
+        const dados = await response.json();
+        
+        const container = document.getElementById('faq-dinamica');
+        const faqEstatica = document.getElementById('faq-estatica');
+        
+        if (dados.faqs && dados.faqs.length > 0) {
+          // Ocultar FAQ estática
+          faqEstatica.style.display = 'none';
+          
+          // Mostrar apenas primeiras 6 FAQs
+          const faqsParaMostrar = dados.faqs.slice(0, 6);
+          const faqsRestantes = dados.faqs.slice(6);
+          
+          faqsParaMostrar.forEach(faq => {
+            const faqElement = document.createElement('details');
+            faqElement.className = 'bg-white rounded-xl p-4 shadow-soft group animate-fadeIn';
+            faqElement.innerHTML = `
+              <summary class="font-medium cursor-pointer flex items-center justify-between">
+                ${faq.pergunta}
+                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded ml-2">IA</span>
+              </summary>
+              <p class="mt-2 text-sm text-slate-600">${faq.resposta}</p>
+            `;
+            container.appendChild(faqElement);
+          });
+          
+          // Mostrar botão "Ver mais" se houver FAQs restantes
+          if (faqsRestantes.length > 0) {
+            const botaoMais = document.getElementById('carregar-mais-faq');
+            botaoMais.classList.remove('hidden');
+            
+            botaoMais.addEventListener('click', () => {
+              faqsRestantes.forEach(faq => {
+                const faqElement = document.createElement('details');
+                faqElement.className = 'bg-white rounded-xl p-4 shadow-soft group animate-fadeIn';
+                faqElement.innerHTML = `
+                  <summary class="font-medium cursor-pointer flex items-center justify-between">
+                    ${faq.pergunta}
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded ml-2">IA</span>
+                  </summary>
+                  <p class="mt-2 text-sm text-slate-600">${faq.resposta}</p>
+                `;
+                container.appendChild(faqElement);
+              });
+              botaoMais.style.display = 'none';
+            });
+          }
+          
+          console.log('FAQ IA carregada:', dados.faqs.length, 'perguntas');
+        }
+        
+      } catch (error) {
+        console.log('Usando FAQ estática - Erro ao carregar FAQ IA:', error);
+        // FAQ estática permanece visível
+      }
+    }
+    
+    // Adicionar ao DOMContentLoaded existente
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarPrecos(); // função que já existe
+      carregarFAQDinamica(); // nova função
+    });
   </script>
 </body>
 </html>
+
 
 
 

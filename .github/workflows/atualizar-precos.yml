@@ -1,0 +1,68 @@
+name: Atualizar Preços das Hospedagens
+
+on:
+  schedule:
+    - cron: '0 10 * * *'  # Roda todo dia às 10h UTC (7h BR)
+  workflow_dispatch:  # Permite rodar manualmente
+
+jobs:
+  atualizar-precos:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Atualizar preços
+      run: |
+        node -e "
+        const fs = require('fs');
+        const https = require('https');
+        
+        // Simulação de busca de preços (você pode implementar scraping real aqui)
+        const novosPrecos = {
+          ultima_atualizacao: new Date().toISOString(),
+          hospedagens: {
+            hostinger: {
+              preco: (Math.random() * 5 + 7).toFixed(2).replace('.', ','),
+              moeda: 'R$',
+              link_afiliado: 'https://seu-link-afiliado-hostinger'
+            },
+            hostgator: {
+              preco: (Math.random() * 8 + 10).toFixed(2).replace('.', ','),
+              moeda: 'R$', 
+              link_afiliado: 'https://seu-link-afiliado-hostgator'
+            },
+            bluehost: {
+              preco: (Math.random() * 2 + 2).toFixed(2),
+              moeda: 'US$',
+              link_afiliado: 'https://seu-link-afiliado-bluehost'
+            },
+            kinsta: {
+              preco: (Math.random() * 10 + 30).toFixed(0),
+              moeda: 'US$',
+              link_afiliado: 'https://seu-link-afiliado-kinsta'
+            },
+            siteground: {
+              preco: (Math.random() * 2 + 2).toFixed(2),
+              moeda: 'US$',
+              link_afiliado: 'https://seu-link-afiliado-siteground'
+            }
+          }
+        };
+        
+        fs.writeFileSync('precos.json', JSON.stringify(novosPrecos, null, 2));
+        console.log('Preços atualizados:', new Date().toISOString());
+        "
+        
+    - name: Commit e Push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add precos.json
+        git diff --staged --quiet || git commit -m "🤖 Atualizar preços automaticamente"
+        git push

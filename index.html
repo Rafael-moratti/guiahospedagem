@@ -353,7 +353,7 @@
     const mobile = document.getElementById('mobile');
     const nav = document.getElementById('nav');
     btn?.addEventListener('click', () => mobile.classList.toggle('hidden'));
-
+  
     // Copy coupon
     document.querySelectorAll('[data-copy]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -366,64 +366,39 @@
         });
       });
     });
-
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    <script>
-      // Menu mobile
-      const btn = document.getElementById('btnMenu');
-      const mobile = document.getElementById('mobile');
-      const nav = document.getElementById('nav');
-      btn?.addEventListener('click', () => mobile.classList.toggle('hidden'));
-    
-      // Copy coupon
-      document.querySelectorAll('[data-copy]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const sel = btn.getAttribute('data-copy');
-          const el = document.querySelector(sel);
-          if (!el) return;
-          navigator.clipboard.writeText(el.textContent.trim()).then(() => {
-            btn.textContent = 'Copiado!';
-            setTimeout(() => (btn.textContent = 'Copiar'), 1200);
-          });
+  
+    // NOVO CÓDIGO AQUI (SEM tags <script>)
+    async function carregarPrecos() {
+      try {
+        const response = await fetch('./precos.json?' + Date.now());
+        const dados = await response.json();
+        
+        Object.keys(dados.hospedagens).forEach(provider => {
+          const elemento = document.querySelector(`[data-provider="${provider}"]`);
+          if (elemento) {
+            const info = dados.hospedagens[provider];
+            elemento.textContent = `${info.moeda} ${info.preco}/mês*`;
+            
+            elemento.style.transition = 'all 0.3s ease';
+            elemento.style.backgroundColor = '#fef3cd';
+            setTimeout(() => {
+              elemento.style.backgroundColor = 'transparent';
+            }, 2000);
+          }
         });
-      });
-    
-      // ADICIONE ESTA PARTE - Carregar preços dinamicamente
-      async function carregarPrecos() {
-        try {
-          const response = await fetch('./precos.json?' + Date.now()); // Cache bust
-          const dados = await response.json();
-          
-          Object.keys(dados.hospedagens).forEach(provider => {
-            const elemento = document.querySelector(`[data-provider="${provider}"]`);
-            if (elemento) {
-              const info = dados.hospedagens[provider];
-              elemento.textContent = `${info.moeda} ${info.preco}/mês*`;
-              
-              // Adiciona efeito visual de atualização
-              elemento.style.transition = 'all 0.3s ease';
-              elemento.style.backgroundColor = '#fef3cd';
-              setTimeout(() => {
-                elemento.style.backgroundColor = 'transparent';
-              }, 2000);
-            }
-          });
-          
-          console.log('Preços atualizados em:', dados.ultima_atualizacao);
-        } catch (error) {
-          console.log('Usando preços padrão - Erro ao carregar:', error);
-        }
+        
+        console.log('Preços atualizados em:', dados.ultima_atualizacao);
+      } catch (error) {
+        console.log('Usando preços padrão - Erro ao carregar:', error);
       }
-      
-      // Carregar preços quando a página carrega
-      document.addEventListener('DOMContentLoaded', carregarPrecos);
+    }
     
-      // Year
-      document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+    document.addEventListener('DOMContentLoaded', carregarPrecos);
+  
+    // Year (código que já existia)
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
+
 

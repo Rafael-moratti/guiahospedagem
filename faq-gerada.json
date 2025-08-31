@@ -1,0 +1,9 @@
+{
+  "ultima_atualizacao": "2025-08-31T15:30:00Z",
+  "faqs": [
+    {
+      "pergunta": "Qual a diferença entre domínio e hospedagem?",
+      "resposta": "O domínio é o endereço do seu site (ex: meusite.com.br), como o endereço da sua casa. A hospedagem é o espaço onde seus arquivos ficam armazenados, como o terreno onde você constrói a casa. Você precisa dos dois para ter um site funcionando."
+    }
+  ]
+}

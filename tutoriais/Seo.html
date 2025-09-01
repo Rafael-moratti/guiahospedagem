@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO e Otimização - Guia Completo | Guia Hospedagem</title>
+    <meta name="description" content="Aprenda SEO do básico ao avançado. Guia completo para fazer seu site aparecer no Google, atrair mais visitantes e aumentar suas vendas online.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .header-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .main-content {
+            background: white;
+            margin: -2rem auto 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 3rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.4rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        h4 {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .emoji-title {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .benefits-list,
+        .tools-list,
+        .checklist {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .benefits-list ul,
+        .tools-list ul,
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li,
+        .tools-list li,
+        .checklist li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .benefits-list li::before,
+        .tools-list li::before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .step-box {
+            background: linear-gradient(45deg, #f39c12, #f1c40f);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box {
+            background: #e8f5e8;
+            border: 1px solid #27ae60;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .example-box h4 {
+            color: #27ae60;
+            margin-top: 0;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            color: #ecf0f1;
+            padding: 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .info-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 3rem 0;
+            color: #bdc3c7;
+        }
+
+        .final-tips {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 3rem 0;
+        }
+
+        .final-tips h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        ol {
+            padding-left: 2rem;
+            margin: 1rem 0;
+        }
+
+        ol li {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-content {
+                margin: -1rem auto 1rem;
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>SEO e Otimização - Guia Completo</h1>
+                <div class="header-subtitle">
+                    <span class="emoji-title">📈</span> Apareça no Google e Atraia Mais Visitantes
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="main-content">
+            <p>O SEO (Search Engine Optimization) é fundamental para o sucesso do seu site. Este guia completo vai te ensinar desde os conceitos básicos até técnicas avançadas para fazer seu site aparecer nas primeiras posições do Google.</p>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">🎯</span> O que é SEO e Por Que é Importante?</h2>
+
+            <p>SEO é o conjunto de técnicas que otimizam seu site para os mecanismos de busca. Quando alguém pesquisa por produtos ou serviços relacionados ao seu negócio, você quer que seu site apareça nos primeiros resultados.</p>
+
+            <div class="benefits-list">
+                <h4>Benefícios do SEO:</h4>
+                <ul>
+                    <li>Aumento do tráfego orgânico</li>
+                    <li>Maior visibilidade da marca</li>
+                    <li>Melhor experiência do usuário</li>
+                    <li>Retorno sobre investimento a longo prazo</li>
+                    <li>Credibilidade e autoridade</li>
+                </ul>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">🔍</span> Pesquisa de Palavras-chave</h2>
+
+            <h3>Como Encontrar as Palavras Certas</h3>
+
+            <p>A pesquisa de palavras-chave é a base de qualquer estratégia de SEO. Você precisa descobrir o que seu público está procurando.</p>
+
+            <div class="tools-list">
+                <h4>Ferramentas Gratuitas:</h4>
+                <ul>
+                    <li>Google Keyword Planner</li>
+                    <li>Ubersuggest</li>
+                    <li>Answer The Public</li>
+                    <li>Google Trends</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Passo a Passo:</h4>
+                
+                <h4>1. Brainstorming Inicial</h4>
+                <ul>
+                    <li>Liste termos relacionados ao seu negócio</li>
+                    <li>Pense como seu cliente pesquisaria</li>
+                    <li>Inclua variações e sinônimos</li>
+                </ul>
+
+                <h4>2. Análise de Volume e Concorrência</h4>
+                <ul>
+                    <li>Use ferramentas para verificar volume de busca</li>
+                    <li>Analise a dificuldade da palavra-chave</li>
+                    <li>Priorize termos com boa relação volume/concorrência</li>
+                </ul>
+
+                <h4>3. Intenção de Busca</h4>
+                <ul>
+                    <li><span class="highlight">Informacional:</span> "como fazer", "o que é"</li>
+                    <li><span class="highlight">Navegacional:</span> nome da marca, site específico</li>
+                    <li><span class="highlight">Transacional:</span> "comprar", "preço", "melhor"</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h4>Exemplo Prático:</h4>
+                <p>Se você tem uma pizzaria, suas palavras-chave podem ser:</p>
+                <ul>
+                    <li>"pizza delivery [sua cidade]"</li>
+                    <li>"melhor pizzaria [seu bairro]"</li>
+                    <li>"pizza margherita preço"</li>
+                </ul>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">📝</span> Meta Tags e Otimização On-Page</h2>
+
+            <h3>Title Tag (Título da Página)</h3>
+
+            <p>O título é um dos fatores mais importantes para o SEO. Ele aparece na aba do navegador e nos resultados de busca.</p>
+
+            <div class="info-box">
+                <h4>Boas Práticas:</h4>
+                <ul>
+                    <li>Máximo de 60 caracteres</li>
+                    <li>Inclua a palavra-chave principal</li>
+                    <li>Seja descritivo e atrativo</li>
+                    <li>Único para cada página</li>
+                </ul>
+            </div>
+
+            <h4>Exemplo:</h4>
+            <pre><code>&lt;title&gt;Pizza Delivery em São Paulo - Pizzaria Bella Vista | Entrega Rápida&lt;/title&gt;</code></pre>
+
+            <h3>Meta Description</h3>
+
+            <p>A descrição que aparece nos resultados de busca. Não influencia diretamente o ranking, mas afeta a taxa de cliques.</p>
+
+            <div class="info-box">
+                <h4>Boas Práticas:</h4>
+                <ul>
+                    <li>Entre 150-160 caracteres</li>
+                    <li>Inclua palavra-chave principal</li>
+                    <li>Seja persuasivo</li>
+                    <li>Inclua call-to-action</li>
+                </ul>
+            </div>
+
+            <h4>Exemplo:</h4>
+            <pre><code>&lt;meta name="description" content="Peça sua pizza online na Pizzaria Bella Vista! Entrega rápida em São Paulo, massas artesanais e ingredientes frescos. Peça já!"&gt;</code></pre>
+
+            <h3>Estrutura de Headings (H1, H2, H3...)</h3>
+
+            <p>Os cabeçalhos organizam seu conteúdo e ajudam o Google a entender a hierarquia das informações.</p>
+
+            <h4>Estrutura Ideal:</h4>
+            <pre><code>&lt;h1&gt;Pizza Margherita - Receita Tradicional Italiana&lt;/h1&gt;
+  &lt;h2&gt;Ingredientes da Pizza Margherita&lt;/h2&gt;
+    &lt;h3&gt;Para a Massa&lt;/h3&gt;
+    &lt;h3&gt;Para o Molho&lt;/h3&gt;
+  &lt;h2&gt;Modo de Preparo&lt;/h2&gt;
+    &lt;h3&gt;Preparando a Massa&lt;/h3&gt;
+    &lt;h3&gt;Montando a Pizza&lt;/h3&gt;</code></pre>
+
+            <h3>Otimização de Imagens</h3>
+
+            <p>As imagens também precisam ser otimizadas para SEO.</p>
+
+            <div class="checklist">
+                <h4>Checklist de Otimização:</h4>
+                <ul>
+                    <li>Use nomes descritivos nos arquivos</li>
+                    <li>Adicione texto alternativo (alt text)</li>
+                    <li>Comprima as imagens</li>
+                    <li>Use formatos modernos (WebP)</li>
+                </ul>
+            </div>
+
+            <h4>Exemplo:</h4>
+            <pre><code>&lt;img src="pizza-margherita-tradicional.jpg" 
+     alt="Pizza Margherita com mussarela, tomate e manjericão fresco"
+     loading="lazy"&gt;</code></pre>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">⚡</span> Velocidade e Performance</h2>
+
+            <h3>Por Que a Velocidade Importa</h3>
+
+            <p>O Google considera a velocidade como fator de ranking. Sites lentos também aumentam a taxa de rejeição.</p>
+
+            <h3>Ferramentas de Teste</h3>
+
+            <h4>Google PageSpeed Insights</h4>
+            <ul>
+                <li>Analisa performance mobile e desktop</li>
+                <li>Fornece sugestões específicas</li>
+                <li>Mostra Core Web Vitals</li>
+            </ul>
+
+            <h4>GTmetrix</h4>
+            <ul>
+                <li>Análise detalhada de performance</li>
+                <li>Histórico de testes</li>
+                <li>Sugestões de otimização</li>
+            </ul>
+
+            <h3>Como Melhorar a Velocidade</h3>
+
+            <h4>1. Otimização de Imagens</h4>
+            <pre><code>&lt;!-- Use formatos modernos --&gt;
+&lt;picture&gt;
+  &lt;source srcset="image.webp" type="image/webp"&gt;
+  &lt;source srcset="image.jpg" type="image/jpeg"&gt;
+  &lt;img src="image.jpg" alt="Descrição da imagem"&gt;
+&lt;/picture&gt;</code></pre>
+
+            <h4>2. Minificação de CSS e JavaScript</h4>
+            <pre><code>&lt;!-- CSS minificado --&gt;
+&lt;link rel="stylesheet" href="styles.min.css"&gt;
+
+&lt;!-- JavaScript minificado --&gt;
+&lt;script src="script.min.js"&gt;&lt;/script&gt;</code></pre>
+
+            <h4>3. Cache do Navegador</h4>
+            <pre><code>&lt;!-- No head do HTML --&gt;
+&lt;meta http-equiv="Cache-Control" content="max-age=31536000"&gt;</code></pre>
+
+            <h4>4. CDN (Content Delivery Network)</h4>
+            <p>Use serviços como Cloudflare para distribuir seu conteúdo globalmente.</p>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">📊</span> Google Analytics e Search Console</h2>
+
+            <h3>Configurando o Google Analytics</h3>
+
+            <div class="step-box">
+                <h4>Passo 1: Criar Conta</h4>
+                <ol>
+                    <li>Acesse analytics.google.com</li>
+                    <li>Clique em "Começar"</li>
+                    <li>Configure sua propriedade</li>
+                </ol>
+            </div>
+
+            <h4>Passo 2: Instalar o Código</h4>
+            <pre><code>&lt;!-- Global site tag (gtag.js) - Google Analytics --&gt;
+&lt;script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+&lt;/script&gt;</code></pre>
+
+            <h3>Google Search Console</h3>
+
+            <div class="benefits-list">
+                <h4>Benefícios:</h4>
+                <ul>
+                    <li>Monitora indexação do site</li>
+                    <li>Identifica erros de rastreamento</li>
+                    <li>Mostra palavras-chave que geram tráfego</li>
+                    <li>Envia sitemap</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Configuração Básica:</h4>
+                <ol>
+                    <li>Acesse search.google.com/search-console</li>
+                    <li>Adicione sua propriedade</li>
+                    <li>Verifique a propriedade</li>
+                    <li>Envie seu sitemap</li>
+                </ol>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">🏗️</span> SEO Técnico</h2>
+
+            <h3>Sitemap XML</h3>
+
+            <p>O sitemap ajuda o Google a entender a estrutura do seu site.</p>
+
+            <h4>Exemplo de Sitemap:</h4>
+            <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://seusite.com/&lt;/loc&gt;
+    &lt;lastmod&gt;2024-01-15&lt;/lastmod&gt;
+    &lt;changefreq&gt;daily&lt;/changefreq&gt;
+    &lt;priority&gt;1.0&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://seusite.com/sobre&lt;/loc&gt;
+    &lt;lastmod&gt;2024-01-10&lt;/lastmod&gt;
+    &lt;changefreq&gt;weekly&lt;/changefreq&gt;
+    &lt;priority&gt;0.8&lt;/priority&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</code></pre>
+
+            <h3>Robots.txt</h3>
+
+            <p>Controla quais partes do site os bots podem rastrear.</p>
+
+            <h4>Exemplo:</h4>
+            <pre><code>User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login/
+
+Sitemap: https://seusite.com/sitemap.xml</code></pre>
+
+            <h3>Schema Markup</h3>
+
+            <p>Dados estruturados que ajudam o Google a entender melhor seu conteúdo.</p>
+
+            <h4>Exemplo para Empresa Local:</h4>
+            <pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Pizzaria Bella Vista",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua das Flores, 123",
+    "addressLocality": "São Paulo",
+    "addressRegion": "SP",
+    "postalCode": "01234-567"
+  },
+  "telephone": "(11) 1234-5678",
+  "url": "https://pizzariabellavista.com"
+}
+&lt;/script&gt;</code></pre>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">📱</span> SEO Mobile</h2>
+
+            <h3>Mobile-First Indexing</h3>
+
+            <p>O Google prioriza a versão mobile do seu site para indexação.</p>
+
+            <div class="checklist">
+                <h4>Checklist Mobile:</h4>
+                <ul>
+                    <li>Design responsivo</li>
+                    <li>Texto legível sem zoom</li>
+                    <li>Links e botões com espaçamento adequado</li>
+                    <li>Velocidade otimizada para mobile</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Teste de Compatibilidade:</h4>
+                <p>Use a ferramenta Mobile-Friendly Test do Google.</p>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">📈</span> Monitoramento e Métricas</h2>
+
+            <h3>Principais Métricas de SEO</h3>
+
+            <h4>1. Posição nas Buscas</h4>
+            <ul>
+                <li>Acompanhe ranking das palavras-chave principais</li>
+                <li>Use ferramentas como SEMrush ou Ahrefs</li>
+            </ul>
+
+            <h4>2. Tráfego Orgânico</h4>
+            <ul>
+                <li>Volume de visitantes vindos do Google</li>
+                <li>Páginas mais visitadas</li>
+                <li>Taxa de conversão</li>
+            </ul>
+
+            <h4>3. Core Web Vitals</h4>
+            <ul>
+                <li><span class="highlight">LCP:</span> Largest Contentful Paint</li>
+                <li><span class="highlight">FID:</span> First Input Delay</li>
+                <li><span class="highlight">CLS:</span> Cumulative Layout Shift</li>
+            </ul>
+
+            <h3>Relatórios Mensais</h3>
+
+            <div class="step-box">
+                <h4>Template de Relatório SEO:</h4>
+
+                <h4>Resumo Executivo:</h4>
+                <ul>
+                    <li>Crescimento do tráfego orgânico</li>
+                    <li>Melhorias de ranking</li>
+                    <li>Principais conquistas</li>
+                </ul>
+
+                <h4>Métricas Detalhadas:</h4>
+                <ul>
+                    <li>Posições das palavras-chave</li>
+                    <li>Páginas com melhor performance</li>
+                    <li>Problemas técnicos encontrados</li>
+                </ul>
+
+                <h4>Próximos Passos:</h4>
+                <ul>
+                    <li>Oportunidades identificadas</li>
+                    <li>Ações para o próximo mês</li>
+                    <li>Metas e objetivos</li>
+                </ul>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">🚀</span> Dicas Avançadas</h2>
+
+            <h3>Link Building</h3>
+
+            <div class="tools-list">
+                <h4>Estratégias Eficazes:</h4>
+                <ul>
+                    <li>Conteúdo linkável (infográficos, estudos)</li>
+                    <li>Guest posts em sites relevantes</li>
+                    <li>Parcerias com influenciadores</li>
+                    <li>Listagens em diretórios de qualidade</li>
+                </ul>
+            </div>
+
+            <h3>SEO Local</h3>
+
+            <div class="tools-list">
+                <h4>Para Negócios Locais:</h4>
+                <ul>
+                    <li>Google Meu Negócio otimizado</li>
+                    <li>Reviews e avaliações</li>
+                    <li>Citações em diretórios locais</li>
+                    <li>Conteúdo com termos geográficos</li>
+                </ul>
+            </div>
+
+            <h3>Otimização de Conversão</h3>
+
+            <div class="tools-list">
+                <h4>CRO + SEO:</h4>
+                <ul>
+                    <li>Páginas de destino otimizadas</li>
+                    <li>Call-to-actions claros</li>
+                    <li>Formulários simplificados</li>
+                    <li>Testes A/B contínuos</li>
+                </ul>
+            </div>
+
+            <div class="separator">---</div>
+
+            <h2><span class="emoji-title">✅</span> Checklist Final de SEO</h2>
+
+            <h3>Técnico</h3>
+            <div class="checklist">
+                <ul>
+                    <li>Sitemap XML enviado</li>
+                    <li>Robots.txt configurado</li>
+                    <li>SSL instalado (HTTPS)</li>
+                    <li>Velocidade otimizada</li>
+                    <li>Mobile-friendly</li>
+                </ul>
+            </div>
+
+            <h3>Conteúdo</h3>
+            <div class="checklist">
+                <ul>
+                    <li>Palavras-chave pesquisadas</li>
+                    <li>Títulos otimizados</li>
+                    <li>Meta descriptions únicas</li>
+                    <li>Estrutura de headings correta</li>
+                    <li>Imagens com alt text</li>
+                </ul>
+            </div>
+
+            <h3>Monitoramento</h3>
+            <div class="checklist">
+                <ul>
+                    <li>Google Analytics instalado</li>
+                    <li>Search Console configurado</li>
+                    <li>Core Web Vitals monitorados</li>
+                    <li>Relatórios mensais criados</li>
+                </ul>
+            </div>
+
+            <div class="separator">---</div>
+
+            <div class="final-tips">
+                <h2><span class="emoji-title">🎯</span> Próximos Passos</h2>
+
+                <ol>
+                    <li><span class="highlight">Faça uma auditoria completa</span> do seu site atual</li>
+                    <li><span class="highlight">Implemente as otimizações básicas</span> primeiro</li>
+                    <li><span class="highlight">Crie um calendário de conteúdo</span> focado em SEO</li>
+                    <li><span class="highlight">Monitore resultados</span> mensalmente</li>
+                    <li><span class="highlight">Ajuste a estratégia</span> com base nos dados</li>
+                </ol>
+
+                <p>Lembre-se: SEO é uma maratona, não uma corrida. Os resultados aparecem com consistência e tempo. Continue aplicando essas técnicas e acompanhe o progresso através das métricas apresentadas neste guia.</p>
+
+                <h3><span class="emoji-title">💡</span> Dica Final:</h3>
+                <p>Mantenha-se atualizado com as mudanças do Google e sempre priorize a experiência do usuário. Um site que oferece valor real aos visitantes naturalmente terá melhor performance no SEO.</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

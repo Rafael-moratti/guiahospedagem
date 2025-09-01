@@ -8,184 +8,514 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .glass { background: rgba(255,255,255,0.65); backdrop-filter: blur(10px); }
-        .shadow-soft { box-shadow: 0 10px 30px rgba(2,6,23,.08); }
-        .animate-fadeIn { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Design futurista suave */
+        body {
+            background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+                        linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.08);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15),
+                        0 0 40px rgba(59, 130, 246, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(59, 130, 246, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .section-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 197, 253, 0.05) 100%);
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .example-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(52, 211, 153, 0.05) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(248, 113, 113, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-200 text-slate-800">
+<body class="min-h-screen text-slate-800">
 
-<!-- Header -->
-<header class="sticky top-0 z-30 bg-white/70 backdrop-blur-md border-b">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="../" class="font-bold text-lg">GuiaHospedagem</a>
-        <nav class="hidden md:flex gap-6 text-sm">
-            <a href="../#comparativo" class="hover:text-slate-900">Comparativo</a>
-            <a href="../#cupons" class="hover:text-slate-900">Cupons</a>
-            <a href="../tutoriais/" class="hover:text-slate-900">Tutoriais</a>
-            <a href="../#faq" class="hover:text-slate-900">FAQ</a>
+<!-- Header compacto -->
+<header class="sticky top-0 z-30 glass-card border-b-0">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="../" class="font-bold text-xl text-gradient">GuiaHospedagem</a>
+        <nav class="hidden md:flex gap-8 text-sm font-medium">
+            <a href="../#comparativo" class="hover:text-blue-600 transition-colors">Comparativo</a>
+            <a href="../#cupons" class="hover:text-blue-600 transition-colors">Cupons</a>
+            <a href="../tutoriais/" class="text-blue-600">Tutoriais</a>
         </nav>
     </div>
 </header>
 
-<!-- Breadcrumb -->
-<div class="max-w-4xl mx-auto px-4 py-4">
-    <nav class="text-sm text-slate-600">
-        <a href="../" class="hover:text-slate-900">Início</a>
-        <span class="mx-2">›</span>
-        <a href="../tutoriais/" class="hover:text-slate-900">Tutoriais</a>
-        <span class="mx-2">›</span>
-        <span class="text-slate-900">Domínio</span>
+<!-- Breadcrumb compacto -->
+<div class="max-w-6xl mx-auto px-6 py-3">
+    <nav class="text-sm text-slate-500 flex items-center gap-2">
+        <a href="../" class="hover:text-blue-600">Início</a>
+        <span>›</span>
+        <a href="../tutoriais/" class="hover:text-blue-600">Tutoriais</a>
+        <span>›</span>
+        <span class="text-slate-800">Domínio</span>
     </nav>
 </div>
 
 <!-- Conteúdo Principal -->
-<main class="max-w-4xl mx-auto px-4 pb-12">
-    <!-- Título -->
-    <div class="text-center mb-8">
-        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span class="text-4xl">🌐</span>
+<main class="max-w-6xl mx-auto px-6 pb-16">
+    
+    <!-- Header da página -->
+    <div class="text-center mb-12">
+        <div class="floating-element w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 neon-glow">
+            <span class="text-2xl">🌐</span>
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold mb-4">Como escolher e registrar o domínio perfeito</h1>
-        <p class="text-slate-600 max-w-2xl mx-auto">Seu domínio é a identidade digital do seu negócio. Aprenda a escolher o nome ideal e registrar de forma segura.</p>
+        <h1 class="text-4xl font-bold mb-4 text-gradient">Registro de Domínio</h1>
+        <p class="text-slate-600 max-w-3xl mx-auto leading-relaxed">Sua identidade digital começa aqui. Entenda de forma simples como escolher, registrar e configurar o domínio perfeito para seu negócio online.</p>
     </div>
 
-    <!-- Seções do Tutorial -->
-    <div class="space-y-8">
+    <!-- O que é um domínio -->
+    <div class="glass-card rounded-2xl p-8 mb-12 neon-glow">
+        <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-xl">🤔</span>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gradient mb-3">O que é um domínio?</h2>
+                <p class="text-slate-700 mb-4">Pense no domínio como o <strong>endereço da sua casa na internet</strong>. Assim como você precisa de um endereço físico para receber correspondências, seu site precisa de um domínio para que as pessoas possam encontrá-lo online.</p>
+            </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="example-box p-4 rounded-xl">
+                <h3 class="font-bold text-green-800 mb-2 flex items-center gap-2">
+                    <span>✅</span> Exemplos de domínios famosos:
+                </h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span><strong>google.com</strong> - Site de buscas</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span><strong>amazon.com.br</strong> - Loja online</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span><strong>seurestaurante.com</strong> - Seu negócio</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tip-box p-4 rounded-xl">
+                <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                    <span>💡</span> Por que é importante?
+                </h3>
+                <div class="space-y-1 text-sm text-blue-700">
+                    <p>• <strong>Credibilidade:</strong> Clientes confiam mais</p>
+                    <p>• <strong>Memória:</strong> Fácil de lembrar e compartilhar</p>
+                    <p>• <strong>Profissionalismo:</strong> Mostra seriedade</p>
+                    <p>• <strong>Controle:</strong> É seu, ninguém pode tirar</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de seções -->
+    <div class="grid lg:grid-cols-2 gap-8 mb-12">
         
         <!-- Seção 1: Pesquisa -->
-        <section class="bg-white rounded-2xl p-6 shadow-soft animate-fadeIn">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="text-2xl">🔍</span>
-                <h2 class="text-xl font-bold">Pesquisa de disponibilidade</h2>
+        <div class="section-card rounded-2xl p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="step-number">1</div>
+                <h2 class="text-2xl font-bold">Pesquisa de Disponibilidade</h2>
             </div>
-            <div class="space-y-4 text-slate-700">
-                <p>Antes de tudo, verifique se o nome que você deseja está livre.</p>
+            
+            <div class="space-y-6">
+                <p class="text-slate-700">Antes de se apaixonar por um nome, você precisa verificar se ele está disponível. É como verificar se o endereço que você quer existe e está vago.</p>
                 
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <h3 class="font-semibold text-blue-800 mb-2">Como fazer a pesquisa:</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li>• Use buscadores de domínios (ex.: Registro.br, GoDaddy, HostGator)</li>
-                        <li>• Evite nomes muito longos ou difíceis de digitar</li>
-                        <li>• Prefira algo simples, direto e fácil de memorizar</li>
-                    </ul>
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800">Como fazer a pesquisa:</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                            <div>
+                                <p class="font-medium">Acesse um site de registro</p>
+                                <p class="text-sm text-slate-600">Registro.br (para .br), GoDaddy, HostGator ou Hostinger</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                            <div>
+                                <p class="font-medium">Digite o nome desejado</p>
+                                <p class="text-sm text-slate-600">Exemplo: "minhapizzaria" (sem espaços ou acentos)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                            <div>
+                                <p class="font-medium">Clique em "Pesquisar" ou "Verificar"</p>
+                                <p class="text-sm text-slate-600">O sistema mostrará se está disponível</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <p class="text-sm text-amber-800">
-                        <strong>💡 Dica:</strong> Teste digitando o nome em diferentes dispositivos para ver se é fácil de escrever.
-                    </p>
+                
+                <div class="warning-box p-4 rounded-xl">
+                    <h3 class="font-bold text-red-800 mb-2 flex items-center gap-2">
+                        <span>⚠️</span> Dicas importantes:
+                    </h3>
+                    <div class="space-y-1 text-sm text-red-700">
+                        <p>• <strong>Evite números e hífens:</strong> Dificulta memorização</p>
+                        <p>• <strong>Máximo 15 caracteres:</strong> Mais fácil de digitar</p>
+                        <p>• <strong>Sem acentos:</strong> Domínios não aceitam ç, ã, etc.</p>
+                        <p>• <strong>Teste falando:</strong> Se é difícil falar, é difícil lembrar</p>
+                    </div>
+                </div>
+                
+                <div class="example-box p-4 rounded-xl">
+                    <h3 class="font-bold text-green-800 mb-2">Exemplos práticos:</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="font-medium text-green-700">✅ Bons nomes:</p>
+                            <p>• pizzariaroma.com</p>
+                            <p>• consultorjoao.com.br</p>
+                            <p>• lojatech.com</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-red-700">❌ Evite:</p>
+                            <p>• pizzaria-do-seu-joão-123.com</p>
+                            <p>• consultoria4você.com.br</p>
+                            <p>• loja-de-produtos-tech.com</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Seção 2: Extensão -->
-        <section class="bg-white rounded-2xl p-6 shadow-soft animate-fadeIn">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="text-2xl">🏷️</span>
-                <h2 class="text-xl font-bold">Escolha da extensão</h2>
+        <div class="section-card rounded-2xl p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="step-number">2</div>
+                <h2 class="text-2xl font-bold">Escolha da Extensão</h2>
             </div>
-            <div class="space-y-4 text-slate-700">
-                <p>A extensão é a parte final do domínio, como .com ou .com.br.</p>
+            
+            <div class="space-y-6">
+                <p class="text-slate-700">A extensão é a parte final do domínio (depois do ponto). É como o "bairro" do seu endereço digital. Cada extensão tem um propósito e público específico.</p>
                 
-                <div class="grid md:grid-cols-3 gap-4">
-                    <div class="bg-green-50 p-4 rounded-lg text-center">
-                        <div class="font-bold text-green-800">.com</div>
-                        <p class="text-sm text-green-700 mt-1">Ideal para negócios globais</p>
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800">Principais extensões e quando usar:</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <span class="text-2xl">🌍</span>
+                            <div class="flex-1">
+                                <p class="font-bold text-blue-800">.com (Comercial)</p>
+                                <p class="text-sm text-blue-700 mb-2">A extensão mais popular e confiável do mundo</p>
+                                <p class="text-xs text-blue-600"><strong>Use quando:</strong> Quer alcance global, e-commerce, empresa</p>
+                                <p class="text-xs text-blue-600"><strong>Preço:</strong> R$ 50-80/ano</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                            <span class="text-2xl">🇧🇷</span>
+                            <div class="flex-1">
+                                <p class="font-bold text-green-800">.com.br (Brasil)</p>
+                                <p class="text-sm text-green-700 mb-2">Extensão nacional, gera mais confiança no Brasil</p>
+                                <p class="text-xs text-green-600"><strong>Use quando:</strong> Foca no mercado brasileiro</p>
+                                <p class="text-xs text-green-600"><strong>Preço:</strong> R$ 40-60/ano</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                            <span class="text-2xl">⚙️</span>
+                            <div class="flex-1">
+                                <p class="font-bold text-purple-800">.net, .org, .info</p>
+                                <p class="text-sm text-purple-700 mb-2">Alternativas quando .com não está disponível</p>
+                                <p class="text-xs text-purple-600"><strong>Use quando:</strong> .com está ocupado ou é muito caro</p>
+                                <p class="text-xs text-purple-600"><strong>Preço:</strong> R$ 45-70/ano</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-blue-50 p-4 rounded-lg text-center">
-                        <div class="font-bold text-blue-800">.com.br</div>
-                        <p class="text-sm text-blue-700 mt-1">Recomendado para empresas no Brasil</p>
+                </div>
+                
+                <div class="tip-box p-4 rounded-xl">
+                    <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <span>🎯</span> Nossa recomendação:
+                    </h3>
+                    <div class="space-y-2 text-sm text-blue-700">
+                        <p><strong>1º lugar:</strong> .com (se disponível e no orçamento)</p>
+                        <p><strong>2º lugar:</strong> .com.br (para negócios no Brasil)</p>
+                        <p><strong>3º lugar:</strong> .net ou .org (como alternativa)</p>
                     </div>
-                    <div class="bg-purple-50 p-4 rounded-lg text-center">
-                        <div class="font-bold text-purple-800">.net, .org, .io</div>
-                        <p class="text-sm text-purple-700 mt-1">Outras opções específicas</p>
+                </div>
+                
+                <div class="example-box p-4 rounded-xl">
+                    <h3 class="font-bold text-green-800 mb-2">Exemplo prático:</h3>
+                    <p class="text-sm text-green-700">Se você quer "minhapizzaria":</p>
+                    <div class="mt-2 space-y-1 text-xs">
+                        <p>• <strong>1ª opção:</strong> minhapizzaria.com</p>
+                        <p>• <strong>Se ocupado:</strong> minhapizzaria.com.br</p>
+                        <p>• <strong>Se ambos ocupados:</strong> pizzariaroma.com</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Seção 3: Registro -->
-        <section class="bg-white rounded-2xl p-6 shadow-soft animate-fadeIn">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="text-2xl">🖊️</span>
-                <h2 class="text-xl font-bold">Registro e configuração</h2>
+        <div class="section-card rounded-2xl p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="step-number">3</div>
+                <h2 class="text-2xl font-bold">Registro e Configuração</h2>
             </div>
-            <div class="space-y-4 text-slate-700">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-semibold mb-2">Passos para registrar:</h3>
-                        <ol class="space-y-2 text-sm">
-                            <li>1. Escolha um provedor confiável</li>
-                            <li>2. Crie sua conta e informe os dados do titular</li>
-                            <li>3. Finalize a compra</li>
-                            <li>4. Configure os DNS para apontar ao seu site</li>
-                        </ol>
+            
+            <div class="space-y-6">
+                <p class="text-slate-700">Agora que você escolheu o nome e a extensão, vamos registrar oficialmente. É como "comprar" o endereço e colocar seu nome nele.</p>
+                
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800">Passo a passo detalhado:</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
+                            <div>
+                                <p class="font-bold">Escolha onde registrar</p>
+                                <p class="text-sm text-slate-600 mb-2">Cada provedor tem preços e serviços diferentes</p>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <div class="bg-slate-50 p-2 rounded">
+                                        <p class="font-medium">HostGator</p>
+                                        <p class="text-slate-600">Brasileiro, suporte local</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-2 rounded">
+                                        <p class="font-medium">GoDaddy</p>
+                                        <p class="text-slate-600">Mundial, muitas opções</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
+                            <div>
+                                <p class="font-bold">Crie sua conta</p>
+                                <p class="text-sm text-slate-600 mb-2">Você precisará informar:</p>
+                                <div class="text-xs space-y-1 text-slate-600">
+                                    <p>• Nome completo (ou da empresa)</p>
+                                    <p>• E-mail (use um que sempre acessa)</p>
+                                    <p>• Telefone para contato</p>
+                                    <p>• Endereço completo</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
+                            <div>
+                                <p class="font-bold">Configure proteções</p>
+                                <p class="text-sm text-slate-600 mb-2">Opções importantes (podem ter custo extra):</p>
+                                <div class="text-xs space-y-1">
+                                    <p>• <strong>Privacidade WHOIS:</strong> Esconde seus dados pessoais</p>
+                                    <p>• <strong>Proteção contra transferência:</strong> Evita roubo do domínio</p>
+                                    <p>• <strong>Renovação automática:</strong> Não perde por esquecimento</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">4</span>
+                            <div>
+                                <p class="font-bold">Finalize o pagamento</p>
+                                <p class="text-sm text-slate-600">Geralmente você pode pagar por 1, 2 ou mais anos. Quanto mais tempo, mais desconto.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-lg">
-                        <h3 class="font-semibold mb-2">Provedores recomendados:</h3>
-                        <ul class="text-sm space-y-1">
-                            <li>• Registro.br (domínios .br)</li>
-                            <li>• HostGator</li>
-                            <li>• GoDaddy</li>
-                            <li>• Hostinger</li>
-                        </ul>
+                </div>
+                
+                <div class="warning-box p-4 rounded-xl">
+                    <h3 class="font-bold text-red-800 mb-2 flex items-center gap-2">
+                        <span>🚨</span> Cuidados importantes:
+                    </h3>
+                    <div class="space-y-1 text-sm text-red-700">
+                        <p>• <strong>Guarde bem os dados de acesso</strong> - sem eles, você perde o controle</p>
+                        <p>• <strong>Use um e-mail que sempre acessa</strong> - avisos importantes chegam por lá</p>
+                        <p>• <strong>Anote a data de vencimento</strong> - domínio vencido pode ser perdido</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Seção 4: Renovação -->
-        <section class="bg-white rounded-2xl p-6 shadow-soft animate-fadeIn">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="text-2xl">🔄</span>
-                <h2 class="text-xl font-bold">Renovação automática</h2>
+        <div class="section-card rounded-2xl p-8">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="step-number">4</div>
+                <h2 class="text-2xl font-bold">Renovação e Manutenção</h2>
             </div>
-            <div class="space-y-4 text-slate-700">
-                <p>Domínios não são vitalícios, precisam ser renovados (normalmente 1 ano).</p>
+            
+            <div class="space-y-6">
+                <p class="text-slate-700">Domínios não são como uma casa que você compra uma vez. É mais como um aluguel anual. Se não renovar, você perde o direito de usar aquele nome.</p>
                 
-                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
-                    <h3 class="font-semibold text-red-800 mb-2">⚠️ Importante:</h3>
-                    <ul class="space-y-1 text-sm text-red-700">
-                        <li>• Ative a renovação automática para não perder o nome</li>
-                        <li>• Mantenha sempre o cartão ou forma de pagamento atualizados</li>
-                        <li>• Configure alertas de vencimento</li>
-                    </ul>
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800">Como funciona a renovação:</h3>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                            <span class="text-2xl">📅</span>
+                            <div>
+                                <p class="font-bold text-amber-800">Período de registro</p>
+                                <p class="text-sm text-amber-700">Domínios são registrados por períodos (1 ano é o mais comum)</p>
+                                <p class="text-xs text-amber-600 mt-1">Você pode registrar por até 10 anos de uma vez</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                            <span class="text-2xl">🔄</span>
+                            <div>
+                                <p class="font-bold text-blue-800">Renovação automática</p>
+                                <p class="text-sm text-blue-700">O melhor jeito de não perder seu domínio</p>
+                                <p class="text-xs text-blue-600 mt-1">Sistema cobra automaticamente antes do vencimento</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                            <span class="text-2xl">⚠️</span>
+                            <div>
+                                <p class="font-bold text-red-800">O que acontece se não renovar</p>
+                                <p class="text-sm text-red-700">Seu domínio entra em período de carência, depois fica disponível para qualquer pessoa registrar</p>
+                                <p class="text-xs text-red-600 mt-1">Você pode perder anos de trabalho e clientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-box p-4 rounded-xl">
+                    <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <span>💡</span> Configuração recomendada:
+                    </h3>
+                    <div class="space-y-2 text-sm text-blue-700">
+                        <p>✅ <strong>Ative renovação automática</strong> - evita esquecimento</p>
+                        <p>✅ <strong>Mantenha cartão atualizado</strong> - renovação não falha</p>
+                        <p>✅ <strong>Configure alertas por e-mail</strong> - 90, 30 e 7 dias antes</p>
+                        <p>✅ <strong>Registre por 2-3 anos</strong> - desconto e tranquilidade</p>
+                    </div>
+                </div>
+                
+                <div class="example-box p-4 rounded-xl">
+                    <h3 class="font-bold text-green-800 mb-2">Timeline típica:</h3>
+                    <div class="space-y-2 text-sm text-green-700">
+                        <div class="flex justify-between">
+                            <span>Registro:</span>
+                            <span>Janeiro 2025</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Primeiro aviso:</span>
+                            <span>Outubro 2025</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Vencimento:</span>
+                            <span>Janeiro 2026</span>
+                        </div>
+                        <div class="flex justify-between text-red-600">
+                            <span>Período de carência:</span>
+                            <span>Fevereiro 2026</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Dica Final -->
-        <section class="bg-gradient-to-r from-slate-900 to-slate-700 text-white rounded-2xl p-6 shadow-soft">
-            <div class="flex items-start gap-3">
-                <span class="text-2xl">👉</span>
-                <div>
-                    <h2 class="text-xl font-bold mb-2">Dica final</h2>
-                    <p>Registre seu domínio o quanto antes. Mesmo que não use agora, você garante exclusividade para o futuro do seu negócio.</p>
+    </div>
+
+    <!-- Resumo final -->
+    <div class="glass-card rounded-2xl p-8 neon-glow mb-12">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-xl">🎯</span>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold text-gradient mb-4">Resumo: Seu próximo passo</h3>
+                <p class="text-slate-700 mb-4">Agora que você entende como funciona, é hora de agir. O domínio ideal pode ser registrado por outra pessoa a qualquer momento.</p>
+                
+                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-xl">
+                        <h4 class="font-bold text-blue-800 mb-2">1. Hoje</h4>
+                        <p class="text-sm text-blue-700">Pesquise disponibilidade do nome que você quer</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <h4 class="font-bold text-green-800 mb-2">2. Esta semana</h4>
+                        <p class="text-sm text-green-700">Registre o domínio antes que alguém pegue</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl">
+                        <h4 class="font-bold text-purple-800 mb-2">3. Próximo passo</h4>
+                        <p class="text-sm text-purple-700">Contrate hospedagem e construa seu site</p>
+                    </div>
                 </div>
             </div>
-        </section>
-
+        </div>
     </div>
 
     <!-- Navegação -->
-    <div class="mt-12 flex justify-between items-center">
-        <a href="../tutoriais/" class="inline-flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900">
+    <div class="flex justify-between items-center">
+        <a href="../tutoriais/" class="inline-flex items-center gap-2 px-6 py-3 text-slate-600 hover:text-blue-600 transition-colors">
             ← Voltar aos tutoriais
         </a>
-        <a href="hospedagem.html" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:opacity-90">
+        <a href="hospedagem.html" class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all neon-glow">
             Próximo: Hospedagem →
         </a>
     </div>
-</main>
 
-<!-- Footer -->
-<footer class="border-t bg-white/70 backdrop-blur-md mt-12">
-    <div class="max-w-7xl mx-auto px-4 py-8 text-sm text-slate-600 text-center">
-        <p>© 2025 GuiaHospedagem — Tutorial completo sobre domínios</p>
-    </div>
-</footer>
+</main>
 
 </body>
 </html>

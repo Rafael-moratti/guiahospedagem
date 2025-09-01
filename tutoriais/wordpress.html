@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalação do WordPress - Guia Hospedagem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            background: #e9ecef;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #495057;
+        }
+
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .tutorial-section {
+            background: white;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header .icon {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .section-content {
+            padding: 2rem;
+        }
+
+        .step-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .step-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .step-content {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .requirement-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .requirement-icon {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .screenshot {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 1rem 0;
+        }
+
+        .faq-item {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .header-content p {
+                font-size: 1rem;
+            }
+            
+            .section-content {
+                padding: 1rem;
+            }
+            
+            .step-content {
+                padding: 1rem;
+            }
+            
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>📥 Instalação do WordPress</h1>
+                <p>Guia completo e prático para instalar o WordPress do zero</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="https://rafael-moratti.github.io/guiahospedagem/">Início</a> > 
+            <a href="https://rafael-moratti.github.io/guiahospedagem/tutoriais/">Tutoriais</a> > 
+            <span>Instalação do WordPress</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            
+            <!-- Seção de Requisitos -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">⚙️</span> Requisitos do Sistema</h2>
+                </div>
+                <div class="section-content">
+                    <p>Antes de começar, verifique se sua hospedagem atende aos requisitos mínimos:</p>
+                    
+                    <div class="requirements-grid">
+                        <div class="requirement-card">
+                            <div class="requirement-icon">🐘</div>
+                            <h3>PHP</h3>
+                            <p><strong>Versão 7.4+</strong><br>Recomendado: 8.0+</p>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">🗄️</div>
+                            <h3>MySQL</h3>
+                            <p><strong>Versão 5.6+</strong><br>ou MariaDB 10.1+</p>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">🌐</div>
+                            <h3>Servidor Web</h3>
+                            <p><strong>Apache ou Nginx</strong><br>com mod_rewrite</p>
+                        </div>
+                        <div class="requirement-card">
+                            <div class="requirement-icon">💾</div>
+                            <h3>Espaço em Disco</h3>
+                            <p><strong>Mínimo 1GB</strong><br>Recomendado: 5GB+</p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>💡 Dica:</strong> A maioria das hospedagens modernas já atende todos esses requisitos automaticamente!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Método 1: Instalação Automática -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">🚀</span> Método 1: Instalação Automática (Recomendado)</h2>
+                </div>
+                <div class="section-content">
+                    <p>A forma mais fácil e rápida de instalar o WordPress é através do instalador automático do seu painel de hospedagem.</p>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Acesse o Painel de Controle</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Entre no painel de controle da sua hospedagem (cPanel, Plesk, ou painel personalizado).</p>
+                            <div class="alert alert-info">
+                                <strong>Não sabe como acessar?</strong> Verifique o e-mail de boas-vindas da sua hospedagem ou entre em contato com o suporte.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Procure o Instalador de WordPress</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Procure por uma dessas opções no seu painel:</p>
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li><strong>Softaculous</strong> - WordPress</li>
+                                <li><strong>Fantastico</strong> - WordPress</li>
+                                <li><strong>WordPress Toolkit</strong></li>
+                                <li><strong>Instalador de Apps</strong></li>
+                                <li><strong>Auto Installer</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Configure a Instalação</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Preencha os dados solicitados:</p>
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li><strong>Domínio:</strong> Escolha onde instalar (exemplo.com ou exemplo.com/blog)</li>
+                                <li><strong>Nome do Site:</strong> O título do seu site</li>
+                                <li><strong>Descrição:</strong> Breve descrição do seu site</li>
+                                <li><strong>Usuário Admin:</strong> Seu nome de usuário (evite "admin")</li>
+                                <li><strong>Senha Admin:</strong> Use uma senha forte</li>
+                                <li><strong>Email Admin:</strong> Seu e-mail principal</li>
+                            </ul>
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Importante:</strong> Anote bem seu usuário e senha de administrador!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Finalize a Instalação</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Clique em <strong>"Instalar"</strong> e aguarde alguns minutos. Pronto! Seu WordPress já está funcionando.</p>
+                            <div class="alert alert-success">
+                                <strong>🎉 Parabéns!</strong> Agora você pode acessar seu site e o painel administrativo em <code>seusite.com/wp-admin</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Método 2: Instalação Manual -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">🔧</span> Método 2: Instalação Manual</h2>
+                </div>
+                <div class="section-content">
+                    <p>Para usuários mais avançados ou quando o instalador automático não está disponível.</p>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Baixe o WordPress</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Acesse <a href="https://br.wordpress.org/download/" target="_blank" style="color: #667eea;">br.wordpress.org/download</a> e baixe a versão mais recente.</p>
+                            <a href="https://br.wordpress.org/download/" target="_blank" class="btn">🔽 Baixar WordPress</a>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Crie um Banco de Dados</div>
+                        </div>
+                        <div class="step-content">
+                            <p>No painel de controle da hospedagem, procure por "MySQL Databases" ou "Bancos de Dados" e:</p>
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li>Crie um novo banco de dados</li>
+                                <li>Crie um usuário para o banco</li>
+                                <li>Adicione o usuário ao banco com todas as permissões</li>
+                                <li>Anote: nome do banco, usuário, senha e servidor</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Faça Upload dos Arquivos</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Descompacte o arquivo do WordPress e envie todos os arquivos para a pasta pública do seu site usando FTP ou o gerenciador de arquivos da hospedagem.</p>
+                            <div class="alert alert-info">
+                                <strong>Pasta pública:</strong> Geralmente é <code>public_html</code>, <code>www</code> ou <code>htdocs</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Execute a Instalação</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Acesse seu site no navegador. O WordPress iniciará automaticamente o processo de instalação:</p>
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li>Escolha o idioma</li>
+                                <li>Insira os dados do banco de dados</li>
+                                <li>Configure as informações do site</li>
+                                <li>Crie seu usuário administrador</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configurações Iniciais -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">⚡</span> Configurações Iniciais Importantes</h2>
+                </div>
+                <div class="section-content">
+                    <p>Após a instalação, faça essas configurações essenciais:</p>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Configurações Gerais</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Vá em <strong>Configurações > Gerais</strong> e ajuste:</p>
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li>Título e slogan do site</li>
+                                <li>Fuso horário</li>
+                                <li>Formato de data e hora</li>
+                                <li>Idioma do site</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Links Permanentes</div>
+                        </div>
+                        <div class="step-content">
+                            <p>Em <strong>Configurações > Links Permanentes</strong>, escolha uma estrutura amigável como:</p>
+                            <div class="code-block">/%postname%/</div>
+                            <p>Isso criará URLs mais bonitas e melhores para SEO.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Segurança Básica</div>
+                        </div>
+                        <div class="step-content">
+                            <ul style="margin: 1rem 0; padding-left: 2rem;">
+                                <li>Instale um plugin de segurança (Wordfence, Sucuri)</li>
+                                <li>Remova ou renomeie o usuário "admin"</li>
+                                <li>Configure backup automático</li>
+                                <li>Mantenha WordPress e plugins sempre atualizados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">❓</span> Perguntas Frequentes</h2>
+                </div>
+                <div class="section-content">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(1)">
+                            Quanto tempo demora para instalar o WordPress?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer" id="faq-1">
+                            Com o instalador automático, leva apenas 2-5 minutos. A instalação manual pode demorar 15-30 minutos para iniciantes.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(2)">
+                            Posso instalar WordPress em qualquer hospedagem?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer" id="faq-2">
+                            Sim, desde que a hospedagem suporte PHP e MySQL. A maioria das hospedagens modernas já vem otimizada para WordPress.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(3)">
+                            É possível migrar meu site depois?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer" id="faq-3">
+                            Sim! Você pode migrar seu WordPress para outra hospedagem usando plugins como Duplicator ou All-in-One WP Migration.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(4)">
+                            O que fazer se der erro na instalação?
+                            <span>+</span>
+                        </div>
+                        <div class="faq-answer" id="faq-4">
+                            Primeiro, verifique se os requisitos são atendidos. Se persistir, entre em contato com o suporte da sua hospedagem - eles ajudam na instalação.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Próximos Passos -->
+            <div class="tutorial-section">
+                <div class="section-header">
+                    <h2><span class="icon">🎯</span> Próximos Passos</h2>
+                </div>
+                <div class="section-content">
+                    <p>Agora que seu WordPress está instalado, recomendamos:</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">🎨</div>
+                            <h3>Escolher um Tema</h3>
+                            <p>Personalize a aparência do seu site</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">🔌</div>
+                            <h3>Instalar Plugins</h3>
+                            <p>Adicione funcionalidades essenciais</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                            <h3>Criar Conteúdo</h3>
+                            <p>Publique suas primeiras páginas e posts</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">🔒</div>
+                            <h3>Configurar SSL</h3>
+                            <p>Ative certificado de segurança</p>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <strong>🎉 Parabéns!</strong> Você instalou o WordPress com sucesso. Agora é hora de criar um site incrível!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(faqNumber) {
+            const answer = document.getElementById(`faq-${faqNumber}`);
+            const question = answer.previousElementSibling;
+            const icon = question.querySelector('span');
+            
+            if (answer.classList.contains('active')) {
+                answer.classList.remove('active');
+                icon.textContent = '+';
+            } else {
+                // Fechar outras FAQs abertas
+                document.querySelectorAll('.faq-answer').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-question span').forEach(item => {
+                    item.textContent = '+';
+                });
+                
+                // Abrir a FAQ clicada
+                answer.classList.add('active');
+                icon.textContent = '−';
+            }
+        }
+
+        // Smooth scroll para âncoras
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+  </html>

@@ -1,29 +1,4 @@
 {
-  "ultima_atualizacao": "2025-09-22T09:19:21.637Z",
-  "faqs": [
-    {
-      "pergunta": "Qual a diferença entre domínio e hospedagem web?",
-      "resposta": "Imagine que você quer ter uma casa na internet. O domínio é o endereço dessa casa (ex: www.meusitenovo.com.br), enquanto a hospedagem é o terreno onde a casa fica construída, ou seja, o espaço físico em um servidor onde os arquivos do seu site (imagens, textos, etc.) são armazenados e disponibilizados para acesso na internet. Você precisa de ambos para ter um site online.  O domínio você compra separadamente e aponta para a sua hospedagem."
-    },
-    {
-      "pergunta": "Quanto custa, em média, uma hospedagem web para iniciantes no Brasil?",
-      "resposta": "O preço da hospedagem varia bastante dependendo das características do plano.  Planos básicos para iniciantes, com recursos suficientes para um site simples, podem custar entre R$ 10 e R$ 50 por mês.  Planos mais robustos, com mais espaço em disco, banda larga e recursos adicionais, podem custar mais de R$ 100 mensais.  É importante comparar preços e recursos oferecidos por diferentes empresas antes de contratar."
-    },
-    {
-      "pergunta": "É fácil criar e gerenciar um site com hospedagem web?  Preciso ter conhecimentos de programação?",
-      "resposta": "Não é necessário ser programador para criar um site simples.  Muitas empresas de hospedagem oferecem construtores de sites (site builders) com interfaces intuitivas, que permitem criar páginas arrastando e soltando elementos.  Outras opções incluem plataformas como WordPress, que também são fáceis de usar com plugins e temas que simplificam a criação de conteúdo.  Embora haja opções para iniciantes sem programação, aprender um pouco de HTML e CSS pode ajudar a personalizar o site futuramente."
-    },
-    {
-      "pergunta": "Como a escolha de um sistema de cache (e.g., Varnish, Redis, Memcached) impacta na performance de um site hospedado em um ambiente de alta disponibilidade, considerando a replicação de dados e a consistência de cache entre múltiplos servidores?",
-      "resposta": "A escolha do sistema de cache é crucial para performance em ambientes de alta disponibilidade.  Sistemas distribuídos como Redis ou Memcached oferecem melhor escalabilidade e performance do que soluções baseadas em Varnish, especialmente em cenários com múltiplos servidores.  A consistência de cache é um desafio; técnicas como cache tags, invalidation policies (e.g., LRU, FIFO), e mecanismos de sincronização entre caches (e.g., utilizando um sistema de mensagens) são essenciais para evitar dados inconsistentes.  A replicação de dados precisa ser coordenada com a estratégia de cache para garantir que todas as instâncias tenham acesso às informações atualizadas.  A escolha dependerá do tipo de aplicação, volume de dados e requisitos de consistência.  Um sistema de cache mal configurado pode levar a problemas de performance ou inconsistências de dados, anulando os benefícios pretendidos."
-    },
-    {
-      "pergunta": "Descreva as melhores práticas para backup e recuperação de um site WordPress hospedado em um ambiente cloud utilizando snapshots e backups incrementais.  Como garantir a integridade dos dados e minimizar o tempo de inatividade durante a restauração?",
-      "resposta": "Em ambientes cloud, a combinação de snapshots (backup de nível de sistema) e backups incrementais de banco de dados (e.g., mysqldump) é ideal.  Snapshots fornecem backups rápidos do estado completo do servidor, servindo como um ponto de recuperação em caso de falhas catastróficas.  Backups incrementais do banco de dados, por sua vez, reduzem o espaço de armazenamento e o tempo necessário para backups frequentes, capturando apenas as alterações desde o último backup completo. Para garantir a integridade, é essencial testar regularmente a restauração de backups, validando a funcionalidade do site após a recuperação.  Minimizar o tempo de inatividade envolve o uso de técnicas como replicação do banco de dados (master-slave), permitindo a comutação rápida para um servidor secundário em caso de falha.  Ambientes de alta disponibilidade (HA) também são cruciais, minimizando interrupções.  Automação de backups e testes de recuperação são imprescindíveis para garantir a continuidade do negócio."
-    },
-    {
-      "pergunta": "Quais são os principais desafios e estratégias para migrar um site de hospedagem compartilhada para um ambiente de contêineres (e.g., Docker, Kubernetes) focado na segurança e na escalabilidade?  Como abordar questões de compatibilidade e configuração de segurança em um novo ambiente?",
-      "resposta": "Migrar de hospedagem compartilhada para contêineres exige planejamento cuidadoso.  Desafios incluem a necessidade de reestruturar a aplicação para funcionar em um ambiente containerizado, garantindo compatibilidade com as imagens de base e dependências.  A segurança é crucial, exigindo a implementação de práticas como imagens de base minimalistas, varreduras de vulnerabilidades regulares, controle de acesso rigoroso (RBAC) e segmentação de rede (namespaces).  Escalabilidade requer otimização da aplicação para contêineres e utilização de recursos de orquestração como Kubernetes para gerenciamento automático de replicação e balanceamento de carga.  Questões de compatibilidade podem surgir com bibliotecas ou dependências específicas do ambiente anterior.  Uma estratégia eficiente envolve testes abrangentes em um ambiente de staging antes da migração para produção, garantindo que todos os componentes estejam configurados corretamente e que a segurança esteja garantida em todas as etapas do processo."
-    }
-  ]
+  "ultima_atualizacao": "2025-09-29T09:18:46.310Z",
+  "faqs": []
 }

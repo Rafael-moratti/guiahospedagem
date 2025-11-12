@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor PDF para Texto com OCR Avançado</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .settings-panel {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .settings-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .setting-row label {
+            color: #555;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .setting-row select,
+        .setting-row input[type="range"] {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .setting-row input[type="range"] {
+            width: 200px;
+        }
+
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f1ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8e9ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-container {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-container h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #resultText {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            background: #f0f1ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .file-info p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .preview-container {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .preview-container img {
+            max-width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 5px 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Conversor PDF para Texto Pro</h1>
+        <p class="subtitle">OCR avançado com pré-processamento de imagem para máxima precisão</p>
+
+        <div class="settings-panel">
+            <h3>⚙️ Configurações de Otimização</h3>
+            
+            <div class="setting-row">
+                <label>Idioma do OCR:</label>
+                <select id="ocrLang">
+                    <option value="por">Português</option>
+                    <option value="eng">Inglês</option>
+                    <option value="spa">Espanhol</option>
+                    <option value="por+eng">Português + Inglês</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <label>Modo de Segmentação:</label>
+                <select id="psmMode">
+                    <option value="3">Auto (Padrão)</option>
+                    <option value="1">Auto com OSD</option>
+                    <option value="4">Coluna única</option>
+                    <option value="6">Bloco uniforme</option>
+                    <option value="11">Texto esparso</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <label>Escala da Imagem:</label>
+                <input type="range" id="scaleRange" min="1.5" max="4" step="0.5" value="3">
+                <span class="range-value" id="scaleValue">3x</span>
+            </div>
+
+            <div class="setting-row">
+                <label>Contraste:</label>
+                <input type="range" id="contrastRange" min="100" max="200" step="10" value="150">
+                <span class="range-value" id="contrastValue">150%</span>
+            </div>
+
+            <div class="setting-row">
+                <label>Brilho:</label>
+                <input type="range" id="brightnessRange" min="80" max="120" step="5" value="100">
+                <span class="range-value" id="brightnessValue">100%</span>
+            </div>
+
+            <div class="setting-row">
+                <label>Nitidez:</label>
+                <input type="range" id="sharpnessRange" min="0" max="2" step="0.5" value="1">
+                <span class="range-value" id="sharpnessValue">1x</span>
+            </div>
+
+            <div class="setting-row">
+                <label>
+                    <input type="checkbox" id="denoise" checked> Remover ruído
+                </label>
+                <label>
+                    <input type="checkbox" id="binarize" checked> Binarização adaptativa
+                </label>
+            </div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📤</div>
+            <h3>Clique ou arraste um arquivo PDF aqui</h3>
+            <p style="margin-top: 10px; color: #666;">Processamento otimizado para PDFs escaneados</p>
+            <input type="file" id="fileInput" accept="application/pdf">
+        </div>
+
+        <div class="file-info" id="fileInfo">
+            <p><strong>Arquivo:</strong> <span id="fileName"></span></p>
+            <p><strong>Tamanho:</strong> <span id="fileSize"></span></p>
+            <p><strong>Páginas:</strong> <span id="pageCount"></span></p>
+            <div style="margin-top: 10px;">
+                <span class="info-badge">Pré-processamento ativo</span>
+                <span class="info-badge">OCR otimizado</span>
+            </div>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+            <h3>Prévia do processamento (última página):</h3>
+            <img id="previewImage" alt="Preview">
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <div class="status" id="status">Preparando...</div>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <h2>Texto Extraído:</h2>
+            <textarea id="resultText" placeholder="O texto extraído aparecerá aqui..."></textarea>
+            <div class="button-group">
+                <button class="btn" onclick="downloadText()">💾 Salvar como TXT</button>
+                <button class="btn" onclick="copyText()">📋 Copiar Texto</button>
+                <button class="btn" onclick="cleanText()">🧹 Limpar Caracteres Estranhos</button>
+                <button class="btn" onclick="resetApp()">🔄 Novo PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+    <canvas id="processCanvas"></canvas>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const status = document.getElementById('status');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultText = document.getElementById('resultText');
+        const fileInfo = document.getElementById('fileInfo');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const canvas = document.getElementById('canvas');
+        const processCanvas = document.getElementById('processCanvas');
+        const ctx = canvas.getContext('2d');
+        const processCtx = processCanvas.getContext('2d');
+
+        let extractedText = '';
+
+        // Update range value displays
+        document.getElementById('scaleRange').oninput = function() {
+            document.getElementById('scaleValue').textContent = this.value + 'x';
+        };
+        document.getElementById('contrastRange').oninput = function() {
+            document.getElementById('contrastValue').textContent = this.value + '%';
+        };
+        document.getElementById('brightnessRange').oninput = function() {
+            document.getElementById('brightnessValue').textContent = this.value + '%';
+        };
+        document.getElementById('sharpnessRange').oninput = function() {
+            document.getElementById('sharpnessValue').textContent = this.value + 'x';
+        };
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            } else {
+                alert('Por favor, selecione um arquivo PDF válido.');
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        function preprocessImage(imageData) {
+            const scale = parseFloat(document.getElementById('scaleRange').value);
+            const contrast = parseFloat(document.getElementById('contrastRange').value);
+            const brightness = parseFloat(document.getElementById('brightnessRange').value);
+            const sharpness = parseFloat(document.getElementById('sharpnessRange').value);
+            const denoise = document.getElementById('denoise').checked;
+            const binarize = document.getElementById('binarize').checked;
+
+            processCanvas.width = imageData.width;
+            processCanvas.height = imageData.height;
+            processCtx.putImageData(imageData, 0, 0);
+
+            // Apply contrast and brightness
+            processCtx.filter = `contrast(${contrast}%) brightness(${brightness}%)`;
+            processCtx.drawImage(processCanvas, 0, 0);
+            processCtx.filter = 'none';
+
+            let processed = processCtx.getImageData(0, 0, processCanvas.width, processCanvas.height);
+            let data = processed.data;
+
+            // Convert to grayscale
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                data[i] = gray;
+                data[i + 1] = gray;
+                data[i + 2] = gray;
+            }
+
+            // Denoise (simple median-like filter)
+            if (denoise) {
+                processed = denoiseImage(processed);
+                data = processed.data;
+            }
+
+            // Sharpen
+            if (sharpness > 0) {
+                processed = sharpenImage(processed, sharpness);
+                data = processed.data;
+            }
+
+            // Adaptive binarization (Otsu-like)
+            if (binarize) {
+                const threshold = calculateOtsuThreshold(data);
+                for (let i = 0; i < data.length; i += 4) {
+                    const value = data[i] > threshold ? 255 : 0;
+                    data[i] = value;
+                    data[i + 1] = value;
+                    data[i + 2] = value;
+                }
+            }
+
+            processCtx.putImageData(processed, 0, 0);
+            return processCanvas.toDataURL('image/png');
+        }
+
+        function denoiseImage(imageData) {
+            const data = imageData.data;
+            const width = imageData.width;
+            const newData = new Uint8ClampedArray(data);
+
+            for (let y = 1; y < imageData.height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    const idx = (y * width + x) * 4;
+                    const neighbors = [];
+                    
+                    for (let dy = -1; dy <= 1; dy++) {
+                        for (let dx = -1; dx <= 1; dx++) {
+                            const nIdx = ((y + dy) * width + (x + dx)) * 4;
+                            neighbors.push(data[nIdx]);
+                        }
+                    }
+                    
+                    neighbors.sort((a, b) => a - b);
+                    const median = neighbors[4];
+                    
+                    newData[idx] = median;
+                    newData[idx + 1] = median;
+                    newData[idx + 2] = median;
+                }
+            }
+
+            return new ImageData(newData, width, imageData.height);
+        }
+
+        function sharpenImage(imageData, amount) {
+            const data = imageData.data;
+            const width = imageData.width;
+            const height = imageData.height;
+            const newData = new Uint8ClampedArray(data);
+
+            const kernel = [
+                0, -1 * amount, 0,
+                -1 * amount, 1 + 4 * amount, -1 * amount,
+                0, -1 * amount, 0
+            ];
+
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    let sum = 0;
+                    for (let ky = -1; ky <= 1; ky++) {
+                        for (let kx = -1; kx <= 1; kx++) {
+                            const idx = ((y + ky) * width + (x + kx)) * 4;
+                            const k = kernel[(ky + 1) * 3 + (kx + 1)];
+                            sum += data[idx] * k;
+                        }
+                    }
+                    const idx = (y * width + x) * 4;
+                    const value = Math.min(255, Math.max(0, sum));
+                    newData[idx] = value;
+                    newData[idx + 1] = value;
+                    newData[idx + 2] = value;
+                }
+            }
+
+            return new ImageData(newData, width, height);
+        }
+
+        function calculateOtsuThreshold(data) {
+            const histogram = new Array(256).fill(0);
+            const total = data.length / 4;
+
+            for (let i = 0; i < data.length; i += 4) {
+                histogram[data[i]]++;
+            }
+
+            let sum = 0;
+            for (let i = 0; i < 256; i++) {
+                sum += i * histogram[i];
+            }
+
+            let sumB = 0;
+            let wB = 0;
+            let wF = 0;
+            let maxVariance = 0;
+            let threshold = 0;
+
+            for (let i = 0; i < 256; i++) {
+                wB += histogram[i];
+                if (wB === 0) continue;
+
+                wF = total - wB;
+                if (wF === 0) break;
+
+                sumB += i * histogram[i];
+                const mB = sumB / wB;
+                const mF = (sum - sumB) / wF;
+                const variance = wB * wF * (mB - mF) * (mB - mF);
+
+                if (variance > maxVariance) {
+                    maxVariance = variance;
+                    threshold = i;
+                }
+            }
+
+            return threshold;
+        }
+
+        async function handleFile(file) {
+            uploadArea.style.display = 'none';
+            fileInfo.style.display = 'block';
+            progressContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            previewContainer.style.display = 'none';
+
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+
+            extractedText = '';
+            resultText.value = '';
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                const numPages = pdf.numPages;
+
+                document.getElementById('pageCount').textContent = numPages;
+
+                const scale = parseFloat(document.getElementById('scaleRange').value);
+                const lang = document.getElementById('ocrLang').value;
+                const psm = document.getElementById('psmMode').value;
+
+                for (let i = 1; i <= numPages; i++) {
+                    updateProgress((i - 1) / numPages * 100, `Processando página ${i} de ${numPages}...`);
+                    
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({
+                        canvasContext: ctx,
+                        viewport: viewport
+                    }).promise;
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const processedImage = preprocessImage(imageData);
+
+                    if (i === numPages) {
+                        previewImage.src = processedImage;
+                        previewContainer.style.display = 'block';
+                    }
+
+                    const result = await Tesseract.recognize(processedImage, lang, {
+                        logger: m => {
+                            if (m.status === 'recognizing text') {
+                                const progress = ((i - 1) / numPages + m.progress / numPages) * 100;
+                                updateProgress(progress, `OCR na página ${i}: ${Math.round(m.progress * 100)}%`);
+                            }
+                        },
+                        tessedit_pageseg_mode: psm,
+                        tessedit_ocr_engine_mode: Tesseract.OEM.LSTM_ONLY
+                    });
+
+                    extractedText += `\n--- Página ${i} ---\n\n${result.data.text}\n`;
+                }
+
+                updateProgress(100, 'Concluído! Aplicando limpeza final...');
+                
+                // Auto clean common OCR errors
+                extractedText = autoCleanText(extractedText);
+                
+                resultText.value = extractedText.trim();
+                resultContainer.style.display = 'block';
+
+            } catch (error) {
+                console.error('Erro ao processar PDF:', error);
+                alert('Erro ao processar o PDF. Tente ajustar as configurações.');
+                resetApp();
+            }
+        }
+
+        function autoCleanText(text) {
+            // Remove excessive spaces
+            text = text.replace(/\s+/g, ' ');
+            
+            // Fix common OCR mistakes in Portuguese
+            text = text.replace(/[|]/g, 'I');
+            text = text.replace(/[`´]/g, "'");
+            text = text.replace(/['']/g, "'");
+            text = text.replace(/[""]/g, '"');
+            text = text.replace(/(\d)\s+(\d)/g, '$1$2'); // Fix split numbers
+            
+            return text;
+        }
+
+        function cleanText() {
+            let text = resultText.value;
+            
+            // Remove non-printable characters except newlines and tabs
+            text = text.replace(/[^\x20-\x7E\n\t\u00C0-\u00FF]/g, '');
+            
+            // Remove multiple spaces
+            text = text.replace(/ {2,}/g, ' ');
+            
+            // Remove multiple newlines
+            text = text.replace(/\n{3,}/g, '\n\n');
+            
+            // Trim lines
+            text = text.split('\n').map(line => line.trim()).join('\n');
+            
+            resultText.value = text;
+            alert('Texto limpo! Caracteres estranhos removidos.');
+        }
+
+        function updateProgress(percent, message) {
+            const rounded = Math.round(percent);
+            progressFill.style.width = rounded + '%';
+            progressFill.textContent = rounded + '%';
+            status.textContent = message;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function downloadText() {
+            const blob = new Blob([resultText.value], { type: 'text/plain; charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'texto_extraido.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyText() {
+            resultText.select();
+            document.execCommand('copy');
+            alert('Texto copiado para a área de transferência!');
+        }
+
+        function resetApp() {
+            uploadArea.style.display = 'block';
+            fileInfo.style.display = 'none';
+            progressContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            previewContainer.style.display = 'none';
+            fileInput.value = '';
+            extractedText = '';
+            resultText.value = '';
+        }
+    </script>
+</body>
+</html>

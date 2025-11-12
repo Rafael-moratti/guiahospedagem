@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor PDF para Texto com OCR Avançado</title>
+    <title>Visualizador PDF com Texto Selecionável</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,9 +17,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
@@ -27,9 +24,9 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 1000px;
-            width: 100%;
-            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
         }
 
         h1 {
@@ -41,101 +38,64 @@
         .subtitle {
             text-align: center;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-size: 14px;
-        }
-
-        .settings-panel {
-            background: #f8f9ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .settings-panel h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-
-        .setting-row label {
-            color: #555;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        .setting-row select,
-        .setting-row input[type="range"] {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .setting-row input[type="range"] {
-            width: 200px;
-        }
-
-        .range-value {
-            min-width: 40px;
-            text-align: center;
-            font-weight: bold;
-            color: #667eea;
         }
 
         .upload-area {
             border: 3px dashed #667eea;
             border-radius: 15px;
-            padding: 40px;
+            padding: 50px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             background: #f8f9ff;
+            margin-bottom: 20px;
         }
 
         .upload-area:hover {
             border-color: #764ba2;
             background: #f0f1ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #764ba2;
-            background: #e8e9ff;
             transform: scale(1.02);
         }
 
         .upload-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 64px;
+            margin-bottom: 20px;
         }
 
         #fileInput {
             display: none;
         }
 
+        .controls {
+            display: none;
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 25px;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
-            margin: 10px 5px;
-            transition: transform 0.2s;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn:disabled {
@@ -143,266 +103,203 @@
             cursor: not-allowed;
         }
 
-        .progress-container {
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .page-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .page-info {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .pdf-viewer {
             display: none;
-            margin: 20px 0;
+            background: #525659;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 70vh;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: #e0e0e0;
-            border-radius: 15px;
+        .page-container {
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: white;
+            display: inline-block;
+        }
+
+        .page-canvas {
+            display: block;
+        }
+
+        .textLayer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
             overflow: hidden;
+            opacity: 0.2;
+            line-height: 1.0;
+            user-select: text;
+            cursor: text;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
-            transition: width 0.3s;
+        .textLayer > span {
+            color: transparent;
+            position: absolute;
+            white-space: pre;
+            cursor: text;
+            transform-origin: 0% 0%;
+        }
+
+        .textLayer ::selection {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        .zoom-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
+            gap: 10px;
+        }
+
+        .zoom-value {
+            min-width: 60px;
+            text-align: center;
             font-weight: bold;
-            font-size: 14px;
+            color: #667eea;
         }
 
-        .status {
-            text-align: center;
-            margin-top: 10px;
-            color: #666;
-            font-size: 14px;
+        input[type="range"] {
+            width: 150px;
         }
 
-        .result-container {
-            display: none;
-            margin-top: 30px;
-        }
-
-        .result-container h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        #resultText {
-            width: 100%;
-            min-height: 300px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        canvas {
-            display: none;
-        }
-
-        .file-info {
-            display: none;
-            background: #f0f1ff;
+        .info-box {
+            background: #e8f5e9;
             padding: 15px;
             border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .file-info p {
-            margin: 5px 0;
-            color: #333;
-        }
-
-        .preview-container {
-            display: none;
-            margin: 20px 0;
+            margin-bottom: 20px;
             text-align: center;
+            color: #2e7d32;
+            font-weight: bold;
+            display: none;
         }
 
-        .preview-container img {
-            max-width: 100%;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            margin-top: 10px;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 18px;
+            display: none;
         }
 
-        .info-badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            margin: 5px 3px;
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📄 Conversor PDF para Texto Pro</h1>
-        <p class="subtitle">OCR avançado com pré-processamento de imagem para máxima precisão</p>
-
-        <div class="settings-panel">
-            <h3>⚙️ Configurações de Otimização</h3>
-            
-            <div class="setting-row">
-                <label>Idioma do OCR:</label>
-                <select id="ocrLang">
-                    <option value="por">Português</option>
-                    <option value="eng">Inglês</option>
-                    <option value="spa">Espanhol</option>
-                    <option value="por+eng">Português + Inglês</option>
-                </select>
-            </div>
-
-            <div class="setting-row">
-                <label>Modo de Segmentação:</label>
-                <select id="psmMode">
-                    <option value="3">Auto (Padrão)</option>
-                    <option value="1">Auto com OSD</option>
-                    <option value="4">Coluna única</option>
-                    <option value="6">Bloco uniforme</option>
-                    <option value="11">Texto esparso</option>
-                </select>
-            </div>
-
-            <div class="setting-row">
-                <label>Escala da Imagem:</label>
-                <input type="range" id="scaleRange" min="1.5" max="4" step="0.5" value="3">
-                <span class="range-value" id="scaleValue">3x</span>
-            </div>
-
-            <div class="setting-row">
-                <label>Contraste:</label>
-                <input type="range" id="contrastRange" min="100" max="200" step="10" value="150">
-                <span class="range-value" id="contrastValue">150%</span>
-            </div>
-
-            <div class="setting-row">
-                <label>Brilho:</label>
-                <input type="range" id="brightnessRange" min="80" max="120" step="5" value="100">
-                <span class="range-value" id="brightnessValue">100%</span>
-            </div>
-
-            <div class="setting-row">
-                <label>Nitidez:</label>
-                <input type="range" id="sharpnessRange" min="0" max="2" step="0.5" value="1">
-                <span class="range-value" id="sharpnessValue">1x</span>
-            </div>
-
-            <div class="setting-row">
-                <label>
-                    <input type="checkbox" id="denoise" checked> Remover ruído
-                </label>
-                <label>
-                    <input type="checkbox" id="binarize" checked> Binarização adaptativa
-                </label>
-            </div>
-        </div>
+        <h1>📄 Visualizador PDF com Texto Selecionável</h1>
+        <p class="subtitle">Abra PDFs, selecione o texto diretamente e salve como novo PDF</p>
 
         <div class="upload-area" id="uploadArea">
-            <div class="upload-icon">📤</div>
-            <h3>Clique ou arraste um arquivo PDF aqui</h3>
-            <p style="margin-top: 10px; color: #666;">Processamento otimizado para PDFs escaneados</p>
+            <div class="upload-icon">📁</div>
+            <h2>Clique ou arraste um arquivo PDF aqui</h2>
+            <p style="margin-top: 15px; color: #666;">O texto do PDF será totalmente selecionável</p>
             <input type="file" id="fileInput" accept="application/pdf">
         </div>
 
-        <div class="file-info" id="fileInfo">
-            <p><strong>Arquivo:</strong> <span id="fileName"></span></p>
-            <p><strong>Tamanho:</strong> <span id="fileSize"></span></p>
-            <p><strong>Páginas:</strong> <span id="pageCount"></span></p>
-            <div style="margin-top: 10px;">
-                <span class="info-badge">Pré-processamento ativo</span>
-                <span class="info-badge">OCR otimizado</span>
+        <div class="info-box" id="infoBox">
+            ✅ PDF carregado! Você pode selecionar qualquer texto diretamente no documento abaixo.
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Carregando PDF...</p>
+        </div>
+
+        <div class="controls" id="controls">
+            <div class="page-controls">
+                <button class="btn" onclick="prevPage()">◀ Anterior</button>
+                <span class="page-info" id="pageInfo">Página 1 de 1</span>
+                <button class="btn" onclick="nextPage()">Próxima ▶</button>
+            </div>
+            
+            <div class="zoom-controls">
+                <label>Zoom:</label>
+                <input type="range" id="zoomRange" min="0.5" max="3" step="0.25" value="1.5">
+                <span class="zoom-value" id="zoomValue">150%</span>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <button class="btn" onclick="extractAllText()">📋 Copiar Todo Texto</button>
+                <button class="btn" onclick="downloadAsPDF()">💾 Salvar como PDF</button>
+                <button class="btn btn-secondary" onclick="reset()">🔄 Novo Arquivo</button>
             </div>
         </div>
 
-        <div class="preview-container" id="previewContainer">
-            <h3>Prévia do processamento (última página):</h3>
-            <img id="previewImage" alt="Preview">
-        </div>
-
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill">0%</div>
-            </div>
-            <div class="status" id="status">Preparando...</div>
-        </div>
-
-        <div class="result-container" id="resultContainer">
-            <h2>Texto Extraído:</h2>
-            <textarea id="resultText" placeholder="O texto extraído aparecerá aqui..."></textarea>
-            <div class="button-group">
-                <button class="btn" onclick="downloadText()">💾 Salvar como TXT</button>
-                <button class="btn" onclick="copyText()">📋 Copiar Texto</button>
-                <button class="btn" onclick="cleanText()">🧹 Limpar Caracteres Estranhos</button>
-                <button class="btn" onclick="resetApp()">🔄 Novo PDF</button>
-            </div>
-        </div>
+        <div class="pdf-viewer" id="pdfViewer"></div>
     </div>
-
-    <canvas id="canvas"></canvas>
-    <canvas id="processCanvas"></canvas>
 
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+        let pdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let currentScale = 1.5;
+        let allTextContent = [];
+
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const status = document.getElementById('status');
-        const resultContainer = document.getElementById('resultContainer');
-        const resultText = document.getElementById('resultText');
-        const fileInfo = document.getElementById('fileInfo');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-        const canvas = document.getElementById('canvas');
-        const processCanvas = document.getElementById('processCanvas');
-        const ctx = canvas.getContext('2d');
-        const processCtx = processCanvas.getContext('2d');
-
-        let extractedText = '';
-
-        // Update range value displays
-        document.getElementById('scaleRange').oninput = function() {
-            document.getElementById('scaleValue').textContent = this.value + 'x';
-        };
-        document.getElementById('contrastRange').oninput = function() {
-            document.getElementById('contrastValue').textContent = this.value + '%';
-        };
-        document.getElementById('brightnessRange').oninput = function() {
-            document.getElementById('brightnessValue').textContent = this.value + '%';
-        };
-        document.getElementById('sharpnessRange').oninput = function() {
-            document.getElementById('sharpnessValue').textContent = this.value + 'x';
-        };
+        const pdfViewer = document.getElementById('pdfViewer');
+        const controls = document.getElementById('controls');
+        const loading = document.getElementById('loading');
+        const infoBox = document.getElementById('infoBox');
+        const zoomRange = document.getElementById('zoomRange');
 
         uploadArea.addEventListener('click', () => fileInput.click());
 
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadArea.classList.add('dragover');
+            uploadArea.style.borderColor = '#764ba2';
+            uploadArea.style.background = '#e8e9ff';
         });
 
         uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = '#f8f9ff';
         });
 
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadArea.classList.remove('dragover');
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = '#f8f9ff';
             const file = e.dataTransfer.files[0];
             if (file && file.type === 'application/pdf') {
-                handleFile(file);
+                loadPDF(file);
             } else {
                 alert('Por favor, selecione um arquivo PDF válido.');
             }
@@ -410,316 +307,173 @@
 
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
-                handleFile(file);
-            }
+            if (file) loadPDF(file);
         });
 
-        function preprocessImage(imageData) {
-            const scale = parseFloat(document.getElementById('scaleRange').value);
-            const contrast = parseFloat(document.getElementById('contrastRange').value);
-            const brightness = parseFloat(document.getElementById('brightnessRange').value);
-            const sharpness = parseFloat(document.getElementById('sharpnessRange').value);
-            const denoise = document.getElementById('denoise').checked;
-            const binarize = document.getElementById('binarize').checked;
+        zoomRange.addEventListener('input', (e) => {
+            currentScale = parseFloat(e.target.value);
+            document.getElementById('zoomValue').textContent = Math.round(currentScale * 100) + '%';
+            renderPage(currentPage);
+        });
 
-            processCanvas.width = imageData.width;
-            processCanvas.height = imageData.height;
-            processCtx.putImageData(imageData, 0, 0);
-
-            // Apply contrast and brightness
-            processCtx.filter = `contrast(${contrast}%) brightness(${brightness}%)`;
-            processCtx.drawImage(processCanvas, 0, 0);
-            processCtx.filter = 'none';
-
-            let processed = processCtx.getImageData(0, 0, processCanvas.width, processCanvas.height);
-            let data = processed.data;
-
-            // Convert to grayscale
-            for (let i = 0; i < data.length; i += 4) {
-                const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                data[i] = gray;
-                data[i + 1] = gray;
-                data[i + 2] = gray;
-            }
-
-            // Denoise (simple median-like filter)
-            if (denoise) {
-                processed = denoiseImage(processed);
-                data = processed.data;
-            }
-
-            // Sharpen
-            if (sharpness > 0) {
-                processed = sharpenImage(processed, sharpness);
-                data = processed.data;
-            }
-
-            // Adaptive binarization (Otsu-like)
-            if (binarize) {
-                const threshold = calculateOtsuThreshold(data);
-                for (let i = 0; i < data.length; i += 4) {
-                    const value = data[i] > threshold ? 255 : 0;
-                    data[i] = value;
-                    data[i + 1] = value;
-                    data[i + 2] = value;
-                }
-            }
-
-            processCtx.putImageData(processed, 0, 0);
-            return processCanvas.toDataURL('image/png');
-        }
-
-        function denoiseImage(imageData) {
-            const data = imageData.data;
-            const width = imageData.width;
-            const newData = new Uint8ClampedArray(data);
-
-            for (let y = 1; y < imageData.height - 1; y++) {
-                for (let x = 1; x < width - 1; x++) {
-                    const idx = (y * width + x) * 4;
-                    const neighbors = [];
-                    
-                    for (let dy = -1; dy <= 1; dy++) {
-                        for (let dx = -1; dx <= 1; dx++) {
-                            const nIdx = ((y + dy) * width + (x + dx)) * 4;
-                            neighbors.push(data[nIdx]);
-                        }
-                    }
-                    
-                    neighbors.sort((a, b) => a - b);
-                    const median = neighbors[4];
-                    
-                    newData[idx] = median;
-                    newData[idx + 1] = median;
-                    newData[idx + 2] = median;
-                }
-            }
-
-            return new ImageData(newData, width, imageData.height);
-        }
-
-        function sharpenImage(imageData, amount) {
-            const data = imageData.data;
-            const width = imageData.width;
-            const height = imageData.height;
-            const newData = new Uint8ClampedArray(data);
-
-            const kernel = [
-                0, -1 * amount, 0,
-                -1 * amount, 1 + 4 * amount, -1 * amount,
-                0, -1 * amount, 0
-            ];
-
-            for (let y = 1; y < height - 1; y++) {
-                for (let x = 1; x < width - 1; x++) {
-                    let sum = 0;
-                    for (let ky = -1; ky <= 1; ky++) {
-                        for (let kx = -1; kx <= 1; kx++) {
-                            const idx = ((y + ky) * width + (x + kx)) * 4;
-                            const k = kernel[(ky + 1) * 3 + (kx + 1)];
-                            sum += data[idx] * k;
-                        }
-                    }
-                    const idx = (y * width + x) * 4;
-                    const value = Math.min(255, Math.max(0, sum));
-                    newData[idx] = value;
-                    newData[idx + 1] = value;
-                    newData[idx + 2] = value;
-                }
-            }
-
-            return new ImageData(newData, width, height);
-        }
-
-        function calculateOtsuThreshold(data) {
-            const histogram = new Array(256).fill(0);
-            const total = data.length / 4;
-
-            for (let i = 0; i < data.length; i += 4) {
-                histogram[data[i]]++;
-            }
-
-            let sum = 0;
-            for (let i = 0; i < 256; i++) {
-                sum += i * histogram[i];
-            }
-
-            let sumB = 0;
-            let wB = 0;
-            let wF = 0;
-            let maxVariance = 0;
-            let threshold = 0;
-
-            for (let i = 0; i < 256; i++) {
-                wB += histogram[i];
-                if (wB === 0) continue;
-
-                wF = total - wB;
-                if (wF === 0) break;
-
-                sumB += i * histogram[i];
-                const mB = sumB / wB;
-                const mF = (sum - sumB) / wF;
-                const variance = wB * wF * (mB - mF) * (mB - mF);
-
-                if (variance > maxVariance) {
-                    maxVariance = variance;
-                    threshold = i;
-                }
-            }
-
-            return threshold;
-        }
-
-        async function handleFile(file) {
+        async function loadPDF(file) {
             uploadArea.style.display = 'none';
-            fileInfo.style.display = 'block';
-            progressContainer.style.display = 'block';
-            resultContainer.style.display = 'none';
-            previewContainer.style.display = 'none';
-
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = formatFileSize(file.size);
-
-            extractedText = '';
-            resultText.value = '';
+            loading.style.display = 'block';
 
             try {
                 const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-                const numPages = pdf.numPages;
-
-                document.getElementById('pageCount').textContent = numPages;
-
-                const scale = parseFloat(document.getElementById('scaleRange').value);
-                const lang = document.getElementById('ocrLang').value;
-                const psm = document.getElementById('psmMode').value;
-
-                for (let i = 1; i <= numPages; i++) {
-                    updateProgress((i - 1) / numPages * 100, `Processando página ${i} de ${numPages}...`);
-                    
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: scale });
-                    
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    await page.render({
-                        canvasContext: ctx,
-                        viewport: viewport
-                    }).promise;
-
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const processedImage = preprocessImage(imageData);
-
-                    if (i === numPages) {
-                        previewImage.src = processedImage;
-                        previewContainer.style.display = 'block';
-                    }
-
-                    const result = await Tesseract.recognize(processedImage, lang, {
-                        logger: m => {
-                            if (m.status === 'recognizing text') {
-                                const progress = ((i - 1) / numPages + m.progress / numPages) * 100;
-                                updateProgress(progress, `OCR na página ${i}: ${Math.round(m.progress * 100)}%`);
-                            }
-                        },
-                        tessedit_pageseg_mode: psm,
-                        tessedit_ocr_engine_mode: Tesseract.OEM.LSTM_ONLY
-                    });
-
-                    extractedText += `\n--- Página ${i} ---\n\n${result.data.text}\n`;
-                }
-
-                updateProgress(100, 'Concluído! Aplicando limpeza final...');
+                pdfDoc = await pdfjsLib.getDocument(arrayBuffer).promise;
+                totalPages = pdfDoc.numPages;
                 
-                // Auto clean common OCR errors
-                extractedText = autoCleanText(extractedText);
+                loading.style.display = 'none';
+                controls.style.display = 'block';
+                pdfViewer.style.display = 'block';
+                infoBox.style.display = 'block';
                 
-                resultText.value = extractedText.trim();
-                resultContainer.style.display = 'block';
-
+                await renderPage(1);
             } catch (error) {
-                console.error('Erro ao processar PDF:', error);
-                alert('Erro ao processar o PDF. Tente ajustar as configurações.');
-                resetApp();
+                console.error('Erro ao carregar PDF:', error);
+                alert('Erro ao carregar o PDF. Tente novamente.');
+                reset();
             }
         }
 
-        function autoCleanText(text) {
-            // Remove excessive spaces
-            text = text.replace(/\s+/g, ' ');
+        async function renderPage(pageNum) {
+            currentPage = pageNum;
+            document.getElementById('pageInfo').textContent = `Página ${pageNum} de ${totalPages}`;
             
-            // Fix common OCR mistakes in Portuguese
-            text = text.replace(/[|]/g, 'I');
-            text = text.replace(/[`´]/g, "'");
-            text = text.replace(/['']/g, "'");
-            text = text.replace(/[""]/g, '"');
-            text = text.replace(/(\d)\s+(\d)/g, '$1$2'); // Fix split numbers
+            pdfViewer.innerHTML = '';
+
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: currentScale });
+
+            const pageContainer = document.createElement('div');
+            pageContainer.className = 'page-container';
+            pageContainer.style.width = viewport.width + 'px';
+            pageContainer.style.height = viewport.height + 'px';
+
+            const canvas = document.createElement('canvas');
+            canvas.className = 'page-canvas';
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            await page.render(renderContext).promise;
+
+            const textLayerDiv = document.createElement('div');
+            textLayerDiv.className = 'textLayer';
+            textLayerDiv.style.width = viewport.width + 'px';
+            textLayerDiv.style.height = viewport.height + 'px';
+
+            pageContainer.appendChild(canvas);
+            pageContainer.appendChild(textLayerDiv);
+            pdfViewer.appendChild(pageContainer);
+
+            const textContent = await page.getTextContent();
             
-            return text;
+            allTextContent[pageNum - 1] = textContent.items.map(item => item.str).join(' ');
+
+            textContent.items.forEach(item => {
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item.str;
+                
+                const tx = pdfjsLib.Util.transform(
+                    viewport.transform,
+                    item.transform
+                );
+
+                const fontSize = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
+                
+                textSpan.style.left = tx[4] + 'px';
+                textSpan.style.top = (tx[5] - fontSize) + 'px';
+                textSpan.style.fontSize = fontSize + 'px';
+                textSpan.style.fontFamily = item.fontName;
+
+                textLayerDiv.appendChild(textSpan);
+            });
         }
 
-        function cleanText() {
-            let text = resultText.value;
-            
-            // Remove non-printable characters except newlines and tabs
-            text = text.replace(/[^\x20-\x7E\n\t\u00C0-\u00FF]/g, '');
-            
-            // Remove multiple spaces
-            text = text.replace(/ {2,}/g, ' ');
-            
-            // Remove multiple newlines
-            text = text.replace(/\n{3,}/g, '\n\n');
-            
-            // Trim lines
-            text = text.split('\n').map(line => line.trim()).join('\n');
-            
-            resultText.value = text;
-            alert('Texto limpo! Caracteres estranhos removidos.');
+        function prevPage() {
+            if (currentPage > 1) {
+                renderPage(currentPage - 1);
+            }
         }
 
-        function updateProgress(percent, message) {
-            const rounded = Math.round(percent);
-            progressFill.style.width = rounded + '%';
-            progressFill.textContent = rounded + '%';
-            status.textContent = message;
+        function nextPage() {
+            if (currentPage < totalPages) {
+                renderPage(currentPage + 1);
+            }
         }
 
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
-            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-        }
+        async function extractAllText() {
+            let fullText = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (!allTextContent[i - 1]) {
+                    const page = await pdfDoc.getPage(i);
+                    const textContent = await page.getTextContent();
+                    allTextContent[i - 1] = textContent.items.map(item => item.str).join(' ');
+                }
+                fullText += `\n--- Página ${i} ---\n\n${allTextContent[i - 1]}\n`;
+            }
 
-        function downloadText() {
-            const blob = new Blob([resultText.value], { type: 'text/plain; charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'texto_extraido.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function copyText() {
-            resultText.select();
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = fullText.trim();
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
             document.execCommand('copy');
-            alert('Texto copiado para a área de transferência!');
+            document.body.removeChild(tempTextarea);
+            
+            alert('Todo o texto foi copiado para a área de transferência!');
         }
 
-        function resetApp() {
+        async function downloadAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            let yPosition = 20;
+
+            pdf.setFontSize(12);
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i > 1) {
+                    pdf.addPage();
+                    yPosition = 20;
+                }
+
+                if (!allTextContent[i - 1]) {
+                    const page = await pdfDoc.getPage(i);
+                    const textContent = await page.getTextContent();
+                    allTextContent[i - 1] = textContent.items.map(item => item.str).join(' ');
+                }
+
+                const pageText = allTextContent[i - 1];
+                const lines = pdf.splitTextToSize(pageText, 180);
+                
+                pdf.text(`Página ${i}`, 20, yPosition);
+                yPosition += 10;
+                
+                pdf.text(lines, 20, yPosition);
+            }
+
+            pdf.save('documento_extraido.pdf');
+        }
+
+        function reset() {
             uploadArea.style.display = 'block';
-            fileInfo.style.display = 'none';
-            progressContainer.style.display = 'none';
-            resultContainer.style.display = 'none';
-            previewContainer.style.display = 'none';
+            controls.style.display = 'none';
+            pdfViewer.style.display = 'none';
+            loading.style.display = 'none';
+            infoBox.style.display = 'none';
             fileInput.value = '';
-            extractedText = '';
-            resultText.value = '';
+            pdfDoc = null;
+            currentPage = 1;
+            totalPages = 0;
+            allTextContent = [];
         }
     </script>
 </body>
